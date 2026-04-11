@@ -1,0 +1,314 @@
+{
+  "items": [
+    {
+      "asset": "road_straight",
+      "id": "1815e3ae-2a99-41a2-84ac-e72526faefc0",
+      "position": [
+        8,
+        -0.1,
+        8
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "road_straight",
+      "id": "2bab438a-9fe0-4974-9eee-937a24e55c36",
+      "position": [
+        16,
+        -0.1,
+        8
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "road_straight_crossing",
+      "id": "ba23b94e-324b-48fb-82a2-20ce51a818f9",
+      "position": [
+        0,
+        -0.1,
+        8
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "base",
+      "id": "f467c224-c210-497a-aa37-dc5d5d891806",
+      "position": [
+        16,
+        -0.2,
+        0
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "road_junction",
+      "id": "048f47a5-26bf-4181-9444-3b7e7cf7ff2a",
+      "position": [
+        -8,
+        -0.1,
+        8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "998874e8-3663-458a-b8da-23dc62e075b3",
+      "position": [
+        8,
+        -0.2,
+        0
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "road_corner",
+      "id": "fb3e0fae-34e6-45ab-a816-fea81dbb35f7",
+      "position": [
+        24,
+        -0.1,
+        8
+      ],
+      "rotationY": -3.141592653589793
+    },
+    {
+      "asset": "road_straight",
+      "id": "12fdf2aa-fc50-499a-b317-a60243b96733",
+      "position": [
+        24,
+        -0.1,
+        0
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "c25aa0d4-e064-4aae-9903-8f2e97bd2c1a",
+      "position": [
+        0,
+        -0.2,
+        -8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "a71c7b44-cf01-4ae8-9896-34c41af3fc60",
+      "position": [
+        -8,
+        -0.2,
+        -8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "road_corner",
+      "id": "b577af88-e6af-4f04-93ce-299ff700b92c",
+      "position": [
+        -8,
+        -0.1,
+        0
+      ],
+      "rotationY": -7.853981633974483
+    },
+    {
+      "asset": "road_corner",
+      "id": "08d61472-1195-4581-82aa-00d459f7c16a",
+      "position": [
+        -16,
+        -0.1,
+        0
+      ],
+      "rotationY": -4.71238898038469
+    },
+    {
+      "asset": "road_straight",
+      "id": "57b3b158-00df-49bb-aa24-b51229ceea37",
+      "position": [
+        -16,
+        -0.1,
+        -8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "07e20169-0868-4578-b368-7b4d54cbf5e6",
+      "position": [
+        8,
+        -0.2,
+        -8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "52b6ab5e-ded8-42c5-8790-58dd7570f430",
+      "position": [
+        0,
+        -0.2,
+        -16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_D_withoutBase",
+      "id": "623ed3fb-b0c8-4d8b-977f-30f876f1d63a",
+      "position": [
+        0,
+        0.2,
+        -16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "4f1c72f0-c10d-4c27-a15f-d101c22c0bed",
+      "position": [
+        0,
+        -0.2,
+        0
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "bench",
+      "id": "3478142f-7c85-47fb-a0b5-c2bf8aab8619",
+      "position": [
+        6,
+        0.3,
+        3
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "bench",
+      "id": "4db53aa5-46b6-44de-adee-b7e5c152a565",
+      "position": [
+        10,
+        0.3,
+        3
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "bush",
+      "id": "a00ce53a-b162-4788-87f4-c947f657a8ac",
+      "position": [
+        3,
+        0.2,
+        3
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "streetlight",
+      "id": "1b224521-6d6f-4122-8f51-5f18ba4bb664",
+      "position": [
+        4,
+        0.2,
+        -5
+      ],
+      "rotationY": -1.5707963267948966
+    },
+    {
+      "asset": "streetlight",
+      "id": "ec86ae30-1413-4af5-ba09-17ac7183bafa",
+      "position": [
+        5,
+        0.2,
+        -4
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "streetlight",
+      "id": "487557ba-2648-497f-9ee5-13b2962b2dc3",
+      "position": [
+        4,
+        0.2,
+        -3
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "streetlight",
+      "id": "6513200b-bb7a-40ac-9fed-e232d8765d75",
+      "position": [
+        3,
+        0.2,
+        -4
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "bush",
+      "id": "f4e55aa8-2393-4936-85c2-049370dbd60b",
+      "position": [
+        4,
+        0.2,
+        -4
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "trafficlight_A",
+      "id": "670cbdbd-638e-4b50-886b-45e2c61fb1d4",
+      "position": [
+        2,
+        0.2,
+        4
+      ],
+      "rotationY": 6.283185307179586
+    },
+    {
+      "asset": "base",
+      "id": "76ea9a1c-c0dc-477a-868e-bd9fdcd58944",
+      "position": [
+        0,
+        -0.2,
+        16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "trafficlight_A",
+      "id": "99f17abd-9e94-489c-a153-7a90b6a59497",
+      "position": [
+        -2,
+        0.2,
+        12
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "firehydrant",
+      "id": "872f4005-fc8f-4092-92a6-72e38f32773a",
+      "position": [
+        15,
+        0.2,
+        3
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "dumpster",
+      "id": "bb3262a2-923c-495a-a149-f02c42b68452",
+      "position": [
+        -3,
+        0.2,
+        2
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "dumpster",
+      "id": "d89a4222-b0bf-49cc-81dd-819769dcd4be",
+      "position": [
+        -3,
+        0.2,
+        -1
+      ],
+      "rotationY": 1.5707963267948966
+    }
+  ]
+}

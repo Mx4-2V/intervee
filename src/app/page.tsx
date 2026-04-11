@@ -1,5 +1,5 @@
-import { WorldPage } from "~/components/scene/WorldPage";
+import { HomeScreen } from "~/components/world/home/HomeScreen";
 
 export default function Home() {
-  return <WorldPage />;
+  return <HomeScreen />;
 }

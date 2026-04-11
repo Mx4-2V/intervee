@@ -1,5 +1,5 @@
-import { WorldPage } from "~/components/scene/WorldPage";
+import { redirect } from "next/navigation";
 
 export default function WorldRoute() {
-  return <WorldPage />;
+  redirect("/game");
 }

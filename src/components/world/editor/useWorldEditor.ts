@@ -1,0 +1,194 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { snapValue } from "~/components/world/shared/scene-constants";
+import type { SaveStatus } from "~/components/world/shared/types";
+import {
+  getWorldAssetDefinition,
+  type WorldItem,
+  type WorldLayout,
+} from "~/lib/world-layout";
+import { useWorldLayoutData } from "~/hooks/use-world-layout-data";
+
+export function useWorldEditor() {
+  const { items, layoutLoaded, setItems } = useWorldLayoutData();
+  const [activeAsset, setActiveAsset] = useState<string | null>(null);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("saved");
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const hasInitializedPersistence = useRef(false);
+  const saveTimeoutRef = useRef<number | undefined>(undefined);
+
+  const selectedItem = useMemo(
+    () => items.find((item) => item.id === selectedItemId),
+    [items, selectedItemId],
+  );
+
+  const persistLayout = useCallback(async (nextItems: WorldItem[]) => {
+    setSaveStatus("saving");
+
+    try {
+      const response = await fetch("/api/world-layout", {
+        body: JSON.stringify({ items: nextItems } satisfies WorldLayout),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      });
+
+      setSaveStatus(response.ok ? "saved" : "error");
+    } catch {
+      setSaveStatus("error");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!layoutLoaded) {
+      return;
+    }
+
+    if (!hasInitializedPersistence.current) {
+      hasInitializedPersistence.current = true;
+      return;
+    }
+
+    if (saveTimeoutRef.current) {
+      window.clearTimeout(saveTimeoutRef.current);
+    }
+
+    saveTimeoutRef.current = window.setTimeout(() => {
+      void persistLayout(items);
+    }, 500);
+
+    return () => {
+      if (saveTimeoutRef.current) {
+        window.clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, [items, layoutLoaded, persistLayout]);
+
+  const placeAsset = useCallback(
+    (point: [number, number, number]) => {
+      if (!activeAsset) {
+        setSelectedItemId(null);
+        return;
+      }
+
+      const definition = getWorldAssetDefinition(activeAsset);
+      if (!definition) {
+        return;
+      }
+
+      const item: WorldItem = {
+        asset: activeAsset,
+        id: crypto.randomUUID(),
+        position: [
+          snapValue(point[0]),
+          definition.defaultY ?? 0,
+          snapValue(point[2]),
+        ],
+        rotationY: 0,
+      };
+
+      setItems((current) => [...current, item]);
+      setSelectedItemId(item.id);
+    },
+    [activeAsset, setItems],
+  );
+
+  const updateSelectedItem = useCallback(
+    (updater: (item: WorldItem) => WorldItem) => {
+      if (!selectedItemId) {
+        return;
+      }
+
+      setItems((current) =>
+        current.map((item) =>
+          item.id === selectedItemId ? updater(item) : item,
+        ),
+      );
+    },
+    [selectedItemId, setItems],
+  );
+
+  const updateSelectedAxis = useCallback(
+    (axis: "x" | "y" | "z", value: number) => {
+      if (!Number.isFinite(value)) {
+        return;
+      }
+
+      updateSelectedItem((item) => {
+        const nextPosition: [number, number, number] = [...item.position] as [
+          number,
+          number,
+          number,
+        ];
+
+        if (axis === "x") nextPosition[0] = value;
+        if (axis === "y") nextPosition[1] = value;
+        if (axis === "z") nextPosition[2] = value;
+
+        return {
+          ...item,
+          position: nextPosition,
+        };
+      });
+    },
+    [updateSelectedItem],
+  );
+
+  const duplicateSelected = useCallback(() => {
+    if (!selectedItem) {
+      return;
+    }
+
+    const duplicate: WorldItem = {
+      ...selectedItem,
+      id: crypto.randomUUID(),
+      position: [
+        selectedItem.position[0] + 1,
+        selectedItem.position[1],
+        selectedItem.position[2] + 1,
+      ],
+    };
+
+    setItems((current) => [...current, duplicate]);
+    setSelectedItemId(duplicate.id);
+  }, [selectedItem, setItems]);
+
+  const deleteSelected = useCallback(() => {
+    if (!selectedItemId) {
+      return;
+    }
+
+    setItems((current) => current.filter((item) => item.id !== selectedItemId));
+    setSelectedItemId(null);
+  }, [selectedItemId, setItems]);
+
+  const nudgeRotation = useCallback(
+    (delta: number) => {
+      updateSelectedItem((item) => ({
+        ...item,
+        rotationY: (item.rotationY ?? 0) + delta,
+      }));
+    },
+    [updateSelectedItem],
+  );
+
+  return {
+    activeAsset,
+    items,
+    layoutLoaded,
+    persistNow: () => persistLayout(items),
+    placeAsset,
+    saveStatus,
+    selectedItem,
+    selectedItemId,
+    selectAsset: setActiveAsset,
+    selectItem: setSelectedItemId,
+    deleteSelected,
+    duplicateSelected,
+    nudgeRotation,
+    updateSelectedAxis,
+  };
+}
