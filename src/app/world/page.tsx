@@ -1,5 +1,5 @@
 import { WorldPage } from "~/components/scene/WorldPage";
 
-export default function Home() {
+export default function WorldRoute() {
   return <WorldPage />;
 }

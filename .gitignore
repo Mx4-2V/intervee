@@ -47,3 +47,10 @@ yarn-error.log*
 
 # generated prisma client
 /generated
+
+# agents
+.agents
+skills-lock.json
+
+# assets
+.assets
