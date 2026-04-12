@@ -87,5 +87,7 @@ export function CityAssetModel({ asset }: { asset: string }) {
 }
 
 for (const asset of Object.keys(WORLD_ASSET_DEFINITIONS)) {
-  useGLTF.preload(`/assets/city-glb/${asset}.glb`);
+  if (!WORLD_ASSET_DEFINITIONS[asset]?.procedural) {
+    useGLTF.preload(`/assets/city-glb/${asset}.glb`);
+  }
 }

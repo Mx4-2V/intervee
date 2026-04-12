@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { snapValue } from "~/components/world/shared/scene-constants";
 import type { SaveStatus } from "~/components/world/shared/types";
 import {
+  BILLBOARD_IMAGE_OPTIONS,
   getWorldAssetDefinition,
   type WorldItem,
   type WorldLayout,
@@ -82,6 +83,10 @@ export function useWorldEditor() {
       const item: WorldItem = {
         asset: activeAsset,
         id: crypto.randomUUID(),
+        imageUrl:
+          activeAsset === "billboard_16_9"
+            ? BILLBOARD_IMAGE_OPTIONS[0]
+            : undefined,
         position: [
           snapValue(point[0]),
           definition.defaultY ?? 0,
@@ -175,6 +180,16 @@ export function useWorldEditor() {
     [updateSelectedItem],
   );
 
+  const updateSelectedImageUrl = useCallback(
+    (imageUrl: string) => {
+      updateSelectedItem((item) => ({
+        ...item,
+        imageUrl,
+      }));
+    },
+    [updateSelectedItem],
+  );
+
   return {
     activeAsset,
     items,
@@ -189,6 +204,7 @@ export function useWorldEditor() {
     deleteSelected,
     duplicateSelected,
     nudgeRotation,
+    updateSelectedImageUrl,
     updateSelectedAxis,
   };
 }

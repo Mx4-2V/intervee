@@ -4,6 +4,7 @@ import { Suspense } from "react";
 
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 
+import { Billboard16x9 } from "~/components/world/shared/Billboard16x9";
 import { CityAssetModel } from "~/components/world/shared/CityAssetModel";
 import { getWorldAssetDefinition, type WorldItem } from "~/lib/world-layout";
 
@@ -22,16 +23,22 @@ function AssetSelectionMarker({ asset }: { asset: string }) {
 }
 
 function AssetContent({
-  asset,
+  item,
   selected,
 }: {
-  asset: string;
+  item: WorldItem;
   selected: boolean;
 }) {
+  const definition = getWorldAssetDefinition(item.asset);
+
   return (
     <>
-      <CityAssetModel asset={asset} />
-      {selected ? <AssetSelectionMarker asset={asset} /> : null}
+      {definition?.procedural ? (
+        <Billboard16x9 imageUrl={item.imageUrl} />
+      ) : (
+        <CityAssetModel asset={item.asset} />
+      )}
+      {selected ? <AssetSelectionMarker asset={item.asset} /> : null}
     </>
   );
 }
@@ -64,7 +71,7 @@ export function PhysicsWorldItems({ items }: { items: WorldItem[] }) {
               />
 
               <Suspense fallback={null}>
-                <AssetContent asset={item.asset} selected={false} />
+                <AssetContent item={item} selected={false} />
               </Suspense>
             </RigidBody>
           );
@@ -77,7 +84,7 @@ export function PhysicsWorldItems({ items }: { items: WorldItem[] }) {
             rotation={[0, item.rotationY ?? 0, 0]}
           >
             <Suspense fallback={null}>
-              <AssetContent asset={item.asset} selected={false} />
+              <AssetContent item={item} selected={false} />
             </Suspense>
           </group>
         );
@@ -108,10 +115,7 @@ export function EditableWorldItems({
           rotation={[0, item.rotationY ?? 0, 0]}
         >
           <Suspense fallback={null}>
-            <AssetContent
-              asset={item.asset}
-              selected={selectedItemId === item.id}
-            />
+            <AssetContent item={item} selected={selectedItemId === item.id} />
           </Suspense>
         </group>
       ))}

@@ -309,6 +309,17 @@
         -1
       ],
       "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "billboard_16_9",
+      "id": "67bc5656-2012-4483-b7a8-80be7fe72036",
+      "imageUrl": "/assets/ads/image.png",
+      "position": [
+        0,
+        6,
+        -15
+      ],
+      "rotationY": 0
     }
   ]
 }

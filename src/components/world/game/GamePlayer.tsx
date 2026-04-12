@@ -55,10 +55,9 @@ export function GamePlayer({
     };
 
     if (
-      !lastReportedPosition.current ||
-      lastReportedPosition.current.x !== nextPosition.x ||
-      lastReportedPosition.current.y !== nextPosition.y ||
-      lastReportedPosition.current.z !== nextPosition.z
+      lastReportedPosition.current?.x !== nextPosition.x ||
+      lastReportedPosition.current?.y !== nextPosition.y ||
+      lastReportedPosition.current?.z !== nextPosition.z
     ) {
       lastReportedPosition.current = nextPosition;
       onPositionChange(nextPosition);

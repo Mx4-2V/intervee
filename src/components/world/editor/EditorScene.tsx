@@ -36,6 +36,7 @@ export function EditorScene() {
     selectedItemId,
     selectAsset,
     selectItem,
+    updateSelectedImageUrl,
     updateSelectedAxis,
   } = useWorldEditor();
 
@@ -58,6 +59,7 @@ export function EditorScene() {
         onNudgeRotation={nudgeRotation}
         onSave={() => void persistNow()}
         onSelectAsset={selectAsset}
+        onUpdateSelectedImageUrl={updateSelectedImageUrl}
         onUpdateSelectedItem={updateSelectedAxis}
         saveStatus={saveStatus}
         selectedItem={selectedItem}

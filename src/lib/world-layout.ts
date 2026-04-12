@@ -6,9 +6,15 @@ export type AssetDefinition = {
   category: AssetCategory;
   defaultY?: number;
   fitMode?: "xyz" | "xz";
+  procedural?: boolean;
   size: [number, number, number];
   solid?: boolean;
 };
+
+export const BILLBOARD_IMAGE_OPTIONS = [
+  "/assets/ads/image.png",
+  "/assets/ads/github.png",
+] as const;
 
 const BUILDING_SCALE = 1.5;
 
@@ -90,6 +96,11 @@ export const WORLD_ASSET_DEFINITIONS: Record<string, AssetDefinition> = {
     fitMode: "xz",
     size: [8, 0.25, 8],
   },
+  billboard_16_9: {
+    category: "prop",
+    procedural: true,
+    size: [7.2, 5.8, 0.8],
+  },
   bench: { category: "prop", size: [2.8, 1.4, 1.3] },
   box_A: { category: "prop", size: [1.1, 1.1, 1.1] },
   box_B: { category: "prop", size: [1.1, 1.1, 1.1] },
@@ -142,6 +153,7 @@ export const WORLD_EDITOR_GROUPS: Array<{
   {
     label: "Props",
     assets: [
+      "billboard_16_9",
       "bench",
       "bush",
       "streetlight",
@@ -171,6 +183,7 @@ export const worldAssetKeySchema = z.string().refine((value) => {
 export const worldItemSchema = z.object({
   asset: worldAssetKeySchema,
   id: z.string().min(1),
+  imageUrl: z.string().optional(),
   position: z.tuple([z.number(), z.number(), z.number()]),
   rotationY: z.number().optional().default(0),
 });

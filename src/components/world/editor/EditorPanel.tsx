@@ -1,6 +1,10 @@
 "use client";
 
-import { WORLD_EDITOR_GROUPS, type WorldItem } from "~/lib/world-layout";
+import {
+  BILLBOARD_IMAGE_OPTIONS,
+  WORLD_EDITOR_GROUPS,
+  type WorldItem,
+} from "~/lib/world-layout";
 
 import type { SaveStatus } from "~/components/world/shared/types";
 
@@ -11,6 +15,7 @@ export function EditorPanel({
   onNudgeRotation,
   onSave,
   onSelectAsset,
+  onUpdateSelectedImageUrl,
   onUpdateSelectedItem,
   saveStatus,
   selectedItem,
@@ -21,6 +26,7 @@ export function EditorPanel({
   onNudgeRotation: (delta: number) => void;
   onSave: () => void;
   onSelectAsset: (asset: string) => void;
+  onUpdateSelectedImageUrl: (imageUrl: string) => void;
   onUpdateSelectedItem: (axis: "x" | "y" | "z", value: number) => void;
   saveStatus: SaveStatus;
   selectedItem: WorldItem | undefined;
@@ -109,6 +115,24 @@ export function EditorPanel({
                 value={selectedItem.position[2]}
               />
             </label>
+            {selectedItem.asset === "billboard_16_9" ? (
+              <label className="text-xs text-slate-300">
+                Imagen
+                <select
+                  className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                  onChange={(event) =>
+                    onUpdateSelectedImageUrl(event.target.value)
+                  }
+                  value={selectedItem.imageUrl ?? BILLBOARD_IMAGE_OPTIONS[0]}
+                >
+                  {BILLBOARD_IMAGE_OPTIONS.map((imageUrl) => (
+                    <option key={imageUrl} value={imageUrl}>
+                      {imageUrl.replace("/assets/ads/", "")}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
             <div className="grid grid-cols-2 gap-2">
               <button
                 className="rounded-md bg-white/10 px-3 py-2 text-sm"
