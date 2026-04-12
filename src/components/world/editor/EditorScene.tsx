@@ -36,6 +36,7 @@ export function EditorScene() {
     selectedItemId,
     selectAsset,
     selectItem,
+    updateSelectedCompanyPortalField,
     updateSelectedImageUrl,
     updateSelectedAxis,
   } = useWorldEditor();
@@ -59,6 +60,7 @@ export function EditorScene() {
         onNudgeRotation={nudgeRotation}
         onSave={() => void persistNow()}
         onSelectAsset={selectAsset}
+        onUpdateSelectedCompanyPortalField={updateSelectedCompanyPortalField}
         onUpdateSelectedImageUrl={updateSelectedImageUrl}
         onUpdateSelectedItem={updateSelectedAxis}
         saveStatus={saveStatus}

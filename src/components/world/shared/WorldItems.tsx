@@ -4,9 +4,14 @@ import { Suspense } from "react";
 
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 
+import { CompanyPortal } from "~/components/world/shared/CompanyPortal";
 import { Billboard16x9 } from "~/components/world/shared/Billboard16x9";
 import { CityAssetModel } from "~/components/world/shared/CityAssetModel";
-import { getWorldAssetDefinition, type WorldItem } from "~/lib/world-layout";
+import {
+  getWorldAssetDefinition,
+  isCompanyPortalItem,
+  type WorldItem,
+} from "~/lib/world-layout";
 
 function AssetSelectionMarker({ asset }: { asset: string }) {
   const definition = getWorldAssetDefinition(asset);
@@ -33,7 +38,13 @@ function AssetContent({
 
   return (
     <>
-      {definition?.procedural ? (
+      {isCompanyPortalItem(item) ? (
+        <CompanyPortal
+          activationRadius={item.companyPortal.activationRadius}
+          logoUrl={item.companyPortal.logoUrl}
+          themeColor={item.companyPortal.themeColor}
+        />
+      ) : definition?.procedural ? (
         <Billboard16x9 imageUrl={item.imageUrl} />
       ) : (
         <CityAssetModel asset={item.asset} />

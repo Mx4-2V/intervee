@@ -16,6 +16,12 @@ export const BILLBOARD_IMAGE_OPTIONS = [
   "/assets/ads/github.png",
 ] as const;
 
+export const COMPANY_PORTAL_LOGO_OPTIONS = [
+  "/assets/logos/microsoft.png",
+  "/assets/logos/github.png"
+  
+] as const;
+
 const BUILDING_SCALE = 1.5;
 
 export const WORLD_ASSET_DEFINITIONS: Record<string, AssetDefinition> = {
@@ -101,6 +107,11 @@ export const WORLD_ASSET_DEFINITIONS: Record<string, AssetDefinition> = {
     procedural: true,
     size: [7.2, 5.8, 0.8],
   },
+  company_portal: {
+    category: "prop",
+    procedural: true,
+    size: [4.8, 4, 4.8],
+  },
   bench: { category: "prop", size: [2.8, 1.4, 1.3] },
   box_A: { category: "prop", size: [1.1, 1.1, 1.1] },
   box_B: { category: "prop", size: [1.1, 1.1, 1.1] },
@@ -154,6 +165,7 @@ export const WORLD_EDITOR_GROUPS: Array<{
     label: "Props",
     assets: [
       "billboard_16_9",
+      "company_portal",
       "bench",
       "bush",
       "streetlight",
@@ -180,21 +192,49 @@ export const worldAssetKeySchema = z.string().refine((value) => {
   return value in WORLD_ASSET_DEFINITIONS;
 }, "Unknown world asset");
 
-export const worldItemSchema = z.object({
-  asset: worldAssetKeySchema,
-  id: z.string().min(1),
-  imageUrl: z.string().optional(),
-  position: z.tuple([z.number(), z.number(), z.number()]),
-  rotationY: z.number().optional().default(0),
+export const companyPortalSchema = z.object({
+  activationRadius: z.number().min(1).max(20).default(3.2),
+  companyName: z.string().min(1),
+  companyRoute: z.string().min(1),
+  companySlug: z.string().min(1),
+  documentKey: z.string().min(1),
+  logoUrl: z.string().min(1),
+  themeColor: z.string().optional(),
 });
+
+export const worldItemSchema = z
+  .object({
+    asset: worldAssetKeySchema,
+    companyPortal: companyPortalSchema.optional(),
+    id: z.string().min(1),
+    imageUrl: z.string().optional(),
+    position: z.tuple([z.number(), z.number(), z.number()]),
+    rotationY: z.number().optional().default(0),
+  })
+  .superRefine((item, context) => {
+    if (item.asset === "company_portal" && !item.companyPortal) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "company_portal items require companyPortal metadata",
+        path: ["companyPortal"],
+      });
+    }
+  });
 
 export const worldLayoutSchema = z.object({
   items: z.array(worldItemSchema),
 });
 
+export type CompanyPortalConfig = z.infer<typeof companyPortalSchema>;
 export type WorldItem = z.infer<typeof worldItemSchema>;
 export type WorldLayout = z.infer<typeof worldLayoutSchema>;
 
 export function getWorldAssetDefinition(asset: string) {
   return WORLD_ASSET_DEFINITIONS[asset];
+}
+
+export function isCompanyPortalItem(
+  item: WorldItem,
+): item is WorldItem & { companyPortal: CompanyPortalConfig } {
+  return item.asset === "company_portal" && !!item.companyPortal;
 }

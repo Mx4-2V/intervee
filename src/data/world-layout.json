@@ -261,13 +261,21 @@
       "rotationY": 3.141592653589793
     },
     {
-      "asset": "billboard_16_9",
+      "asset": "company_portal",
+      "companyPortal": {
+        "activationRadius": 1.6,
+        "companyName": "Microsoft",
+        "companyRoute": "/companies/microsoft/interview",
+        "companySlug": "microsoft",
+        "documentKey": "microsoft",
+        "logoUrl": "/assets/logos/microsoft.png",
+        "themeColor": "#ffffff"
+      },
       "id": "67bc5656-2012-4483-b7a8-80be7fe72036",
-      "imageUrl": "/assets/ads/image.png",
       "position": [
-        0,
-        6,
-        -18
+        -13,
+        0.2,
+        -7.5
       ],
       "rotationY": 0
     },
@@ -334,7 +342,7 @@
     {
       "asset": "billboard_16_9",
       "id": "af4c47a6-8d15-42dc-9897-96938e54d9b8",
-      "imageUrl": "/assets/ads/github.png",
+      "imageUrl": "/assets/ads/image.png",
       "position": [
         -18,
         8,
@@ -599,6 +607,36 @@
         -16,
         -0.2,
         0
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "company_portal",
+      "companyPortal": {
+        "activationRadius": 1.6,
+        "companyName": "Microsoft",
+        "companyRoute": "/companies/microsoft/interview",
+        "companySlug": "microsoft",
+        "documentKey": "microsoft",
+        "logoUrl": "/assets/logos/github.png",
+        "themeColor": "#ffffff"
+      },
+      "id": "d354a0b7-ced6-4801-9cc7-30eb18a851ca",
+      "position": [
+        -1.5,
+        0.2,
+        -14.3
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "billboard_16_9",
+      "id": "3c94bd76-878d-42c7-878d-a3bc3d16b9cc",
+      "imageUrl": "/assets/ads/github.png",
+      "position": [
+        0,
+        6.7,
+        -18
       ],
       "rotationY": 0
     }

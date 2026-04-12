@@ -2,7 +2,9 @@
 
 import {
   BILLBOARD_IMAGE_OPTIONS,
+  COMPANY_PORTAL_LOGO_OPTIONS,
   WORLD_EDITOR_GROUPS,
+  type CompanyPortalConfig,
   type WorldItem,
 } from "~/lib/world-layout";
 
@@ -15,6 +17,7 @@ export function EditorPanel({
   onNudgeRotation,
   onSave,
   onSelectAsset,
+  onUpdateSelectedCompanyPortalField,
   onUpdateSelectedImageUrl,
   onUpdateSelectedItem,
   saveStatus,
@@ -26,6 +29,10 @@ export function EditorPanel({
   onNudgeRotation: (delta: number) => void;
   onSave: () => void;
   onSelectAsset: (asset: string) => void;
+  onUpdateSelectedCompanyPortalField: (
+    field: keyof CompanyPortalConfig,
+    value: number | string,
+  ) => void;
   onUpdateSelectedImageUrl: (imageUrl: string) => void;
   onUpdateSelectedItem: (axis: "x" | "y" | "z", value: number) => void;
   saveStatus: SaveStatus;
@@ -132,6 +139,127 @@ export function EditorPanel({
                   ))}
                 </select>
               </label>
+            ) : null}
+            {selectedItem.asset === "company_portal" ? (
+              <>
+                <label className="text-xs text-slate-300">
+                  Empresa
+                  <input
+                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    onChange={(event) =>
+                      onUpdateSelectedCompanyPortalField(
+                        "companyName",
+                        event.target.value,
+                      )
+                    }
+                    type="text"
+                    value={
+                      selectedItem.companyPortal?.companyName ?? "Microsoft"
+                    }
+                  />
+                </label>
+                <label className="text-xs text-slate-300">
+                  Slug
+                  <input
+                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    onChange={(event) =>
+                      onUpdateSelectedCompanyPortalField(
+                        "companySlug",
+                        event.target.value,
+                      )
+                    }
+                    type="text"
+                    value={
+                      selectedItem.companyPortal?.companySlug ?? "microsoft"
+                    }
+                  />
+                </label>
+                <label className="text-xs text-slate-300">
+                  Ruta
+                  <input
+                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    onChange={(event) =>
+                      onUpdateSelectedCompanyPortalField(
+                        "companyRoute",
+                        event.target.value,
+                      )
+                    }
+                    type="text"
+                    value={
+                      selectedItem.companyPortal?.companyRoute ??
+                      "/companies/microsoft/interview"
+                    }
+                  />
+                </label>
+                <label className="text-xs text-slate-300">
+                  Documento
+                  <input
+                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    onChange={(event) =>
+                      onUpdateSelectedCompanyPortalField(
+                        "documentKey",
+                        event.target.value,
+                      )
+                    }
+                    type="text"
+                    value={
+                      selectedItem.companyPortal?.documentKey ?? "microsoft"
+                    }
+                  />
+                </label>
+                <label className="text-xs text-slate-300">
+                  Logo
+                  <select
+                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    onChange={(event) =>
+                      onUpdateSelectedCompanyPortalField(
+                        "logoUrl",
+                        event.target.value,
+                      )
+                    }
+                    value={
+                      selectedItem.companyPortal?.logoUrl ??
+                      COMPANY_PORTAL_LOGO_OPTIONS[0]
+                    }
+                  >
+                    {COMPANY_PORTAL_LOGO_OPTIONS.map((logoUrl) => (
+                      <option key={logoUrl} value={logoUrl}>
+                        {logoUrl.replace("/assets/logos/", "")}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="text-xs text-slate-300">
+                  Radio de activacion
+                  <input
+                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    min={1}
+                    onChange={(event) =>
+                      onUpdateSelectedCompanyPortalField(
+                        "activationRadius",
+                        Number(event.target.value),
+                      )
+                    }
+                    step="0.1"
+                    type="number"
+                    value={selectedItem.companyPortal?.activationRadius ?? 3.2}
+                  />
+                </label>
+                <label className="text-xs text-slate-300">
+                  Color
+                  <input
+                    className="mt-1 h-10 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2"
+                    onChange={(event) =>
+                      onUpdateSelectedCompanyPortalField(
+                        "themeColor",
+                        event.target.value,
+                      )
+                    }
+                    type="color"
+                    value={selectedItem.companyPortal?.themeColor ?? "#7dd3fc"}
+                  />
+                </label>
+              </>
             ) : null}
             <div className="grid grid-cols-2 gap-2">
               <button

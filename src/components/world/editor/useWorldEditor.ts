@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { getCompanyPortalDefaults } from "~/lib/company-interviews";
 import {
   GRID_SIZE,
   snapValue,
@@ -9,11 +10,25 @@ import {
 import type { SaveStatus } from "~/components/world/shared/types";
 import {
   BILLBOARD_IMAGE_OPTIONS,
+  type CompanyPortalConfig,
   getWorldAssetDefinition,
   type WorldItem,
   type WorldLayout,
 } from "~/lib/world-layout";
 import { useWorldLayoutData } from "~/hooks/use-world-layout-data";
+
+const FALLBACK_COMPANY_PORTAL: CompanyPortalConfig = {
+  activationRadius: 3.2,
+  companyName: "Microsoft",
+  companyRoute: "/companies/microsoft/interview",
+  companySlug: "microsoft",
+  documentKey: "microsoft",
+  logoUrl: "/assets/logos/microsoft.png",
+  themeColor: "#7dd3fc",
+};
+
+const DEFAULT_COMPANY_PORTAL =
+  getCompanyPortalDefaults("microsoft") ?? FALLBACK_COMPANY_PORTAL;
 
 export function useWorldEditor() {
   const { items, layoutLoaded, setItems } = useWorldLayoutData();
@@ -85,6 +100,8 @@ export function useWorldEditor() {
 
       const item: WorldItem = {
         asset: activeAsset,
+        companyPortal:
+          activeAsset === "company_portal" ? DEFAULT_COMPANY_PORTAL : undefined,
         id: crypto.randomUUID(),
         imageUrl:
           activeAsset === "billboard_16_9"
@@ -92,7 +109,7 @@ export function useWorldEditor() {
             : undefined,
         position: [
           snapValue(point[0]),
-          definition.defaultY ?? 0,
+          activeAsset === "company_portal" ? 0.05 : (definition.defaultY ?? 0),
           snapValue(point[2]),
         ],
         rotationY: 0,
@@ -249,6 +266,23 @@ export function useWorldEditor() {
     [updateSelectedItem],
   );
 
+  const updateSelectedCompanyPortalField = useCallback(
+    <Field extends keyof CompanyPortalConfig>(
+      field: Field,
+      value: CompanyPortalConfig[Field],
+    ) => {
+      updateSelectedItem((item) => ({
+        ...item,
+        companyPortal: {
+          ...DEFAULT_COMPANY_PORTAL,
+          ...item.companyPortal,
+          [field]: value,
+        },
+      }));
+    },
+    [updateSelectedItem],
+  );
+
   return {
     activeAsset,
     items,
@@ -263,6 +297,7 @@ export function useWorldEditor() {
     deleteSelected,
     duplicateSelected,
     nudgeRotation,
+    updateSelectedCompanyPortalField,
     updateSelectedImageUrl,
     updateSelectedAxis,
   };

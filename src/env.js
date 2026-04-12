@@ -7,6 +7,21 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    AI_GATEWAY_API_KEY: z.string().optional(),
+    AI_INTERVIEW_MAX_OUTPUT_TOKENS: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(1600),
+    AI_INTERVIEW_MODEL: z.string().default("openai/gpt-5.4-mini"),
+    AI_INTERVIEW_PASS_SCORE: z.coerce.number().min(0).max(100).default(72),
+    AI_INTERVIEW_QUESTION_COUNT: z.coerce
+      .number()
+      .int()
+      .min(3)
+      .max(8)
+      .default(5),
+    AI_INTERVIEW_TEMPERATURE: z.coerce.number().min(0).max(2).default(0.35),
     AUTH_SECRET:
       process.env.NODE_ENV === "production"
         ? z.string()
@@ -33,6 +48,12 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
+    AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
+    AI_INTERVIEW_MAX_OUTPUT_TOKENS: process.env.AI_INTERVIEW_MAX_OUTPUT_TOKENS,
+    AI_INTERVIEW_MODEL: process.env.AI_INTERVIEW_MODEL,
+    AI_INTERVIEW_PASS_SCORE: process.env.AI_INTERVIEW_PASS_SCORE,
+    AI_INTERVIEW_QUESTION_COUNT: process.env.AI_INTERVIEW_QUESTION_COUNT,
+    AI_INTERVIEW_TEMPERATURE: process.env.AI_INTERVIEW_TEMPERATURE,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
     AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
