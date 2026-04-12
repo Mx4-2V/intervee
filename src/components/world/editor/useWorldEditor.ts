@@ -2,7 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { snapValue } from "~/components/world/shared/scene-constants";
+import {
+  GRID_SIZE,
+  snapValue,
+} from "~/components/world/shared/scene-constants";
 import type { SaveStatus } from "~/components/world/shared/types";
 import {
   BILLBOARD_IMAGE_OPTIONS,
@@ -141,6 +144,62 @@ export function useWorldEditor() {
     },
     [updateSelectedItem],
   );
+
+  useEffect(() => {
+    const isFormFieldFocused = () => {
+      const activeElement = document.activeElement;
+      return (
+        activeElement instanceof HTMLInputElement ||
+        activeElement instanceof HTMLSelectElement ||
+        activeElement instanceof HTMLTextAreaElement ||
+        activeElement instanceof HTMLButtonElement ||
+        activeElement?.getAttribute("contenteditable") === "true"
+      );
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!selectedItem || isFormFieldFocused()) {
+        return;
+      }
+
+      switch (event.code) {
+        case "ArrowLeft":
+          event.preventDefault();
+          updateSelectedAxis(
+            "x",
+            snapValue(selectedItem.position[0] - GRID_SIZE),
+          );
+          break;
+        case "ArrowRight":
+          event.preventDefault();
+          updateSelectedAxis(
+            "x",
+            snapValue(selectedItem.position[0] + GRID_SIZE),
+          );
+          break;
+        case "ArrowUp":
+          event.preventDefault();
+          updateSelectedAxis(
+            "z",
+            snapValue(selectedItem.position[2] - GRID_SIZE),
+          );
+          break;
+        case "ArrowDown":
+          event.preventDefault();
+          updateSelectedAxis(
+            "z",
+            snapValue(selectedItem.position[2] + GRID_SIZE),
+          );
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedItem, updateSelectedAxis]);
 
   const duplicateSelected = useCallback(() => {
     if (!selectedItem) {

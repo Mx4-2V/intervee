@@ -41,16 +41,6 @@
       "rotationY": 0
     },
     {
-      "asset": "road_junction",
-      "id": "048f47a5-26bf-4181-9444-3b7e7cf7ff2a",
-      "position": [
-        -8,
-        -0.1,
-        8
-      ],
-      "rotationY": 0
-    },
-    {
       "asset": "base",
       "id": "998874e8-3663-458a-b8da-23dc62e075b3",
       "position": [
@@ -96,37 +86,7 @@
       "position": [
         -8,
         -0.2,
-        -8
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "road_corner",
-      "id": "b577af88-e6af-4f04-93ce-299ff700b92c",
-      "position": [
-        -8,
-        -0.1,
         0
-      ],
-      "rotationY": -7.853981633974483
-    },
-    {
-      "asset": "road_corner",
-      "id": "08d61472-1195-4581-82aa-00d459f7c16a",
-      "position": [
-        -16,
-        -0.1,
-        0
-      ],
-      "rotationY": -4.71238898038469
-    },
-    {
-      "asset": "road_straight",
-      "id": "57b3b158-00df-49bb-aa24-b51229ceea37",
-      "position": [
-        -16,
-        -0.1,
-        -8
       ],
       "rotationY": 0
     },
@@ -156,7 +116,7 @@
       "position": [
         0,
         0.2,
-        -16
+        -18
       ],
       "rotationY": 0
     },
@@ -261,16 +221,6 @@
       "rotationY": 6.283185307179586
     },
     {
-      "asset": "base",
-      "id": "76ea9a1c-c0dc-477a-868e-bd9fdcd58944",
-      "position": [
-        0,
-        -0.2,
-        16
-      ],
-      "rotationY": 0
-    },
-    {
       "asset": "trafficlight_A",
       "id": "99f17abd-9e94-489c-a153-7a90b6a59497",
       "position": [
@@ -294,21 +244,21 @@
       "asset": "dumpster",
       "id": "bb3262a2-923c-495a-a149-f02c42b68452",
       "position": [
-        -3,
+        -6,
         0.2,
-        2
+        3
       ],
-      "rotationY": 1.5707963267948966
+      "rotationY": -3.141592653589793
     },
     {
       "asset": "dumpster",
       "id": "d89a4222-b0bf-49cc-81dd-819769dcd4be",
       "position": [
-        -3,
+        -9,
         0.2,
-        -1
+        3
       ],
-      "rotationY": 1.5707963267948966
+      "rotationY": 3.141592653589793
     },
     {
       "asset": "billboard_16_9",
@@ -317,7 +267,338 @@
       "position": [
         0,
         6,
-        -15
+        -18
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "14890df4-0214-4afe-97c0-ac628dc52243",
+      "position": [
+        -8,
+        -0.2,
+        -16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "bba1232b-b641-4fa7-a436-64c9a7980bc4",
+      "position": [
+        -24,
+        -0.2,
+        0
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "road_corner",
+      "id": "239ff815-caf0-4ffe-abfe-e3e133ef6b08",
+      "position": [
+        -8,
+        -0.1,
+        8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "1cb45910-9ad7-42c0-8170-511aaa3b4c0b",
+      "position": [
+        -16,
+        -0.2,
+        8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_G_withoutBase",
+      "id": "43d31bcf-d840-4634-a6ec-ac3c61c64769",
+      "position": [
+        -17,
+        0.2,
+        -8
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "base",
+      "id": "7fcdedaa-8f1a-4869-ae7c-90eb80ea22d1",
+      "position": [
+        -16,
+        -0.2,
+        -16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "billboard_16_9",
+      "id": "af4c47a6-8d15-42dc-9897-96938e54d9b8",
+      "imageUrl": "/assets/ads/github.png",
+      "position": [
+        -18,
+        8,
+        -8
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "bench",
+      "id": "c75721f0-8d37-4895-82d1-576608433d90",
+      "position": [
+        -6,
+        0.3,
+        -3
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "bush",
+      "id": "5b39c823-c07b-46fd-a589-eac248df2261",
+      "position": [
+        -4,
+        0.2,
+        -3
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "51abcc7b-03eb-4c19-a8f8-08d4fde11496",
+      "position": [
+        -8,
+        -0.2,
+        -8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_F_withoutBase",
+      "id": "141331b3-2e75-45d2-933f-3917464a9556",
+      "position": [
+        -8,
+        0.2,
+        -18
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "d4bf2b1a-c053-47c1-9b4d-9f6ee83e9068",
+      "position": [
+        -16,
+        -0.2,
+        -8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "watertower",
+      "id": "211a4616-4faf-4ae8-b8d6-2295c8693033",
+      "position": [
+        -9,
+        8.6,
+        -17.8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "streetlight",
+      "id": "79ae249a-b58f-44ee-85e4-4d2e94830976",
+      "position": [
+        -3.5,
+        0.2,
+        -16
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "streetlight",
+      "id": "39cd9753-fbbe-4410-a20c-79d47be9052c",
+      "position": [
+        -12.3,
+        0.2,
+        -16
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "streetlight",
+      "id": "01fc686d-da45-46ae-9060-e0efe67ddfb4",
+      "position": [
+        -15.5,
+        0.2,
+        -12
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "bench",
+      "id": "f7ec1aea-d79e-4f38-9295-fb6ec9e1bfe9",
+      "position": [
+        -10,
+        0.3,
+        -11
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "bush",
+      "id": "cf1cc0a0-b545-4d82-8f2d-16a4e5a79457",
+      "position": [
+        -8,
+        0.2,
+        -11
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "box_A",
+      "id": "58cefb0e-5155-430b-88cf-96fac63f43e6",
+      "position": [
+        3,
+        0.2,
+        -19
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "box_A",
+      "id": "eeaddd65-2db8-496a-843c-3287286198ac",
+      "position": [
+        3,
+        1.2,
+        -19
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "box_A",
+      "id": "f21e1a24-4e38-407f-89b6-bdc8134c8f4e",
+      "position": [
+        3,
+        0.2,
+        -18
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_B_withoutBase",
+      "id": "a82aa967-7a78-4e2b-9d4d-a00d0fd94ebc",
+      "position": [
+        7,
+        0.2,
+        -9
+      ],
+      "rotationY": 4.71238898038469
+    },
+    {
+      "asset": "dumpster",
+      "id": "72656b57-df70-4e80-8d45-f0c471f32cd6",
+      "position": [
+        9,
+        0.2,
+        -6
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "road_straight_crossing",
+      "id": "2a65634d-afec-4fd1-818b-916c4305a4af",
+      "position": [
+        24,
+        -0.1,
+        -8
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "base",
+      "id": "b7856f5b-75df-4f76-b09f-663024756299",
+      "position": [
+        16,
+        -0.2,
+        -8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_A_withoutBase",
+      "id": "9ab0bc83-683d-4a2d-ad3a-e9f6b4ea6d44",
+      "position": [
+        12,
+        0.2,
+        -9
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "building_H_withoutBase",
+      "id": "024c9bc7-4e8a-49d8-8840-ef8c3c63d1cd",
+      "position": [
+        -22,
+        0,
+        -8
+      ],
+      "rotationY": 4.71238898038469
+    },
+    {
+      "asset": "streetlight",
+      "id": "34455cb2-12a5-4894-b83c-0b09364a0b94",
+      "position": [
+        -5,
+        0.2,
+        -12
+      ],
+      "rotationY": 4.71238898038469
+    },
+    {
+      "asset": "bush",
+      "id": "1a0fa3fc-8dc6-4eed-bf3c-cd4e39b59798",
+      "position": [
+        11,
+        0.2,
+        -6
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "bush",
+      "id": "ee63559a-97c8-4019-8286-0bafef8a626d",
+      "position": [
+        14,
+        0.2,
+        -6
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_D_withoutBase",
+      "id": "83c2cd03-c0e8-4afb-9674-57adf6cb796b",
+      "position": [
+        -17,
+        0.2,
+        -2
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_B_withoutBase",
+      "id": "4a86d2f4-cf92-438c-8e45-82e8b6937763",
+      "position": [
+        -22,
+        0.2,
+        -2
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "5542233d-5984-448b-a2ef-ece1cb298bde",
+      "position": [
+        -16,
+        -0.2,
+        0
       ],
       "rotationY": 0
     }
