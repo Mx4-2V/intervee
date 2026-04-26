@@ -1,4 +1,5 @@
-import { generateObject, gateway } from "ai";
+import { generateText } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
 
 import { env } from "~/env";
 import { getCompanyInterviewProfile } from "~/lib/company-interviews";
@@ -9,17 +10,30 @@ import {
   interviewQuestionsResponseSchema,
 } from "~/lib/interview-schema";
 
-function ensureAiGatewayConfig() {
-  if (!env.AI_GATEWAY_API_KEY && !process.env.VERCEL) {
+function ensureAiCredentials() {
+  if (!env.GROQ_API_KEY && !env.AI_GATEWAY_API_KEY && !env.OPENAI_API_KEY && !process.env.VERCEL) {
     throw new Error(
-      "Missing AI Gateway credentials. Set AI_GATEWAY_API_KEY in .env for local development.",
+      "Missing AI credentials. Set GROQ_API_KEY, OPENAI_API_KEY or AI_GATEWAY_API_KEY in .env.",
     );
   }
 }
 
 function getInterviewModel() {
-  ensureAiGatewayConfig();
-  return gateway(env.AI_INTERVIEW_MODEL);
+  ensureAiCredentials();
+
+  const apiKey = env.GROQ_API_KEY || env.OPENAI_API_KEY || env.AI_GATEWAY_API_KEY;
+  const openai = createOpenAI({
+    apiKey,
+    baseURL: "https://api.groq.com/openai/v1",
+    compatibility: "compatible",
+  });
+
+  // Remove possible 'openai/' prefix from the model string
+  const modelName = env.AI_INTERVIEW_MODEL.replace(/^openai\//, "");
+
+  return openai(modelName, {
+    structuredOutputs: false,
+  });
 }
 
 export async function generateCompanyInterviewQuestions(companySlug: string) {
@@ -29,7 +43,7 @@ export async function generateCompanyInterviewQuestions(companySlug: string) {
     throw new Error(`Unknown company '${companySlug}'`);
   }
 
-  const result = await generateObject({
+  const { text } = await generateText({
     maxOutputTokens: env.AI_INTERVIEW_MAX_OUTPUT_TOKENS,
     model: getInterviewModel(),
     prompt: [
@@ -46,16 +60,21 @@ export async function generateCompanyInterviewQuestions(companySlug: string) {
       "Use pragmatic engineering language and avoid trivia.",
       `Return exactly ${env.AI_INTERVIEW_QUESTION_COUNT} questions.`,
     ].join("\n"),
-    schema: interviewQuestionsResponseSchema,
-    schemaDescription:
-      "Interview questions for a candidate based on a company hiring brief.",
-    schemaName: "interview_questions",
     system:
-      "You are a senior technical interviewer creating a structured job interview. Keep the bar serious, practical, and aligned to the supplied hiring brief.",
+      "You are a senior technical interviewer creating a structured job interview. Keep the bar serious, practical, and aligned to the supplied hiring brief.\n" +
+      "MUY IMPORTANTE: Todas las preguntas, respuestas esperadas y cualquier otro texto generado debe estar en ESPAÑOL.\n\n" +
+      "DEBES devolver ÚNICAMENTE un JSON válido con esta estructura:\n" +
+      "{\n" +
+      '  "questions": [\n' +
+      '    { "prompt": "string", "evaluationFocus": "string", "id": "string" }\n' +
+      "  ]\n" +
+      "}\n" +
+      "NO agregues ningún texto extra, ni saludos, ni formato markdown.",
     temperature: env.AI_INTERVIEW_TEMPERATURE,
   });
 
-  const response = result.object;
+  const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
+  const response = JSON.parse(cleanedText);
 
   return {
     company,
@@ -99,20 +118,29 @@ export async function evaluateCompanyInterview(
     "Summary feedback must explain whether the candidate is hireable for this specific role.",
   ].join("\n\n");
 
-  const result = await generateObject({
+  const { text } = await generateText({
     maxOutputTokens: env.AI_INTERVIEW_MAX_OUTPUT_TOKENS,
     model: getInterviewModel(),
     prompt,
-    schema: interviewEvaluationModelSchema,
-    schemaDescription:
-      "Structured interview evaluation for a candidate applying to a company role.",
-    schemaName: "interview_evaluation",
     system:
-      "You are a hiring panel calibrating a pass or fail decision. Favor evidence, technical clarity, ownership, and communication. Penalize vague answers heavily.",
+      "You are a hiring panel calibrating a pass or fail decision. Favor evidence, technical clarity, ownership, and communication. Penalize vague answers heavily.\n" +
+      "MUY IMPORTANTE: Todas las evaluaciones, feedback, resúmenes y cualquier otro texto generado debe estar en ESPAÑOL.\n\n" +
+      "DEBES devolver ÚNICAMENTE un JSON válido con esta estructura:\n" +
+      "{\n" +
+      '  "hiringSignals": ["string"],\n' +
+      '  "risks": ["string"],\n' +
+      '  "overallScore": 0,\n' +
+      '  "summary": "string",\n' +
+      '  "questionReviews": [\n' +
+      '    { "questionId": "string", "score": 0, "feedback": "string" }\n' +
+      "  ]\n" +
+      "}\n" +
+      "NO agregues ningún texto extra, ni saludos, ni formato markdown.",
     temperature: env.AI_INTERVIEW_TEMPERATURE,
   });
 
-  const evaluationResult = result.object;
+  const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
+  const evaluationResult = JSON.parse(cleanedText);
 
   const reviewByQuestionId = new Map(
     evaluationResult.questionReviews.map((review) => [

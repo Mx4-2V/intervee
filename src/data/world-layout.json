@@ -114,7 +114,7 @@
       "asset": "building_D_withoutBase",
       "id": "623ed3fb-b0c8-4d8b-977f-30f876f1d63a",
       "position": [
-        0,
+        2,
         0.2,
         -18
       ],
@@ -157,56 +157,6 @@
         3,
         0.2,
         3
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "streetlight",
-      "id": "1b224521-6d6f-4122-8f51-5f18ba4bb664",
-      "position": [
-        4,
-        0.2,
-        -5
-      ],
-      "rotationY": -1.5707963267948966
-    },
-    {
-      "asset": "streetlight",
-      "id": "ec86ae30-1413-4af5-ba09-17ac7183bafa",
-      "position": [
-        5,
-        0.2,
-        -4
-      ],
-      "rotationY": 3.141592653589793
-    },
-    {
-      "asset": "streetlight",
-      "id": "487557ba-2648-497f-9ee5-13b2962b2dc3",
-      "position": [
-        4,
-        0.2,
-        -3
-      ],
-      "rotationY": 1.5707963267948966
-    },
-    {
-      "asset": "streetlight",
-      "id": "6513200b-bb7a-40ac-9fed-e232d8765d75",
-      "position": [
-        3,
-        0.2,
-        -4
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "bush",
-      "id": "f4e55aa8-2393-4936-85c2-049370dbd60b",
-      "position": [
-        4,
-        0.2,
-        -4
       ],
       "rotationY": 0
     },
@@ -273,9 +223,9 @@
       },
       "id": "67bc5656-2012-4483-b7a8-80be7fe72036",
       "position": [
-        -13,
+        -14.3,
         0.2,
-        -7.5
+        -12
       ],
       "rotationY": 0
     },
@@ -323,9 +273,9 @@
       "asset": "building_G_withoutBase",
       "id": "43d31bcf-d840-4634-a6ec-ac3c61c64769",
       "position": [
-        -17,
+        -18.2,
         0.2,
-        -8
+        -12
       ],
       "rotationY": 1.5707963267948966
     },
@@ -346,29 +296,9 @@
       "position": [
         -18,
         8,
-        -8
+        -12
       ],
       "rotationY": 1.5707963267948966
-    },
-    {
-      "asset": "bench",
-      "id": "c75721f0-8d37-4895-82d1-576608433d90",
-      "position": [
-        -6,
-        0.3,
-        -3
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "bush",
-      "id": "5b39c823-c07b-46fd-a589-eac248df2261",
-      "position": [
-        -4,
-        0.2,
-        -3
-      ],
-      "rotationY": 0
     },
     {
       "asset": "base",
@@ -384,7 +314,7 @@
       "asset": "building_F_withoutBase",
       "id": "141331b3-2e75-45d2-933f-3917464a9556",
       "position": [
-        -8,
+        -5,
         0.2,
         -18
       ],
@@ -404,7 +334,7 @@
       "asset": "watertower",
       "id": "211a4616-4faf-4ae8-b8d6-2295c8693033",
       "position": [
-        -9,
+        -13,
         8.6,
         -17.8
       ],
@@ -414,7 +344,7 @@
       "asset": "streetlight",
       "id": "79ae249a-b58f-44ee-85e4-4d2e94830976",
       "position": [
-        -3.5,
+        -1,
         0.2,
         -16
       ],
@@ -424,7 +354,7 @@
       "asset": "streetlight",
       "id": "39cd9753-fbbe-4410-a20c-79d47be9052c",
       "position": [
-        -12.3,
+        -9,
         0.2,
         -16
       ],
@@ -434,81 +364,11 @@
       "asset": "streetlight",
       "id": "01fc686d-da45-46ae-9060-e0efe67ddfb4",
       "position": [
-        -15.5,
+        -16.5,
         0.2,
-        -12
+        -14.3
       ],
       "rotationY": 3.141592653589793
-    },
-    {
-      "asset": "bench",
-      "id": "f7ec1aea-d79e-4f38-9295-fb6ec9e1bfe9",
-      "position": [
-        -10,
-        0.3,
-        -11
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "bush",
-      "id": "cf1cc0a0-b545-4d82-8f2d-16a4e5a79457",
-      "position": [
-        -8,
-        0.2,
-        -11
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "box_A",
-      "id": "58cefb0e-5155-430b-88cf-96fac63f43e6",
-      "position": [
-        3,
-        0.2,
-        -19
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "box_A",
-      "id": "eeaddd65-2db8-496a-843c-3287286198ac",
-      "position": [
-        3,
-        1.2,
-        -19
-      ],
-      "rotationY": 1.5707963267948966
-    },
-    {
-      "asset": "box_A",
-      "id": "f21e1a24-4e38-407f-89b6-bdc8134c8f4e",
-      "position": [
-        3,
-        0.2,
-        -18
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "building_B_withoutBase",
-      "id": "a82aa967-7a78-4e2b-9d4d-a00d0fd94ebc",
-      "position": [
-        7,
-        0.2,
-        -9
-      ],
-      "rotationY": 4.71238898038469
-    },
-    {
-      "asset": "dumpster",
-      "id": "72656b57-df70-4e80-8d45-f0c471f32cd6",
-      "position": [
-        9,
-        0.2,
-        -6
-      ],
-      "rotationY": 0
     },
     {
       "asset": "road_straight_crossing",
@@ -527,76 +387,6 @@
         16,
         -0.2,
         -8
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "building_A_withoutBase",
-      "id": "9ab0bc83-683d-4a2d-ad3a-e9f6b4ea6d44",
-      "position": [
-        12,
-        0.2,
-        -9
-      ],
-      "rotationY": 1.5707963267948966
-    },
-    {
-      "asset": "building_H_withoutBase",
-      "id": "024c9bc7-4e8a-49d8-8840-ef8c3c63d1cd",
-      "position": [
-        -22,
-        0,
-        -8
-      ],
-      "rotationY": 4.71238898038469
-    },
-    {
-      "asset": "streetlight",
-      "id": "34455cb2-12a5-4894-b83c-0b09364a0b94",
-      "position": [
-        -5,
-        0.2,
-        -12
-      ],
-      "rotationY": 4.71238898038469
-    },
-    {
-      "asset": "bush",
-      "id": "1a0fa3fc-8dc6-4eed-bf3c-cd4e39b59798",
-      "position": [
-        11,
-        0.2,
-        -6
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "bush",
-      "id": "ee63559a-97c8-4019-8286-0bafef8a626d",
-      "position": [
-        14,
-        0.2,
-        -6
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "building_D_withoutBase",
-      "id": "83c2cd03-c0e8-4afb-9674-57adf6cb796b",
-      "position": [
-        -17,
-        0.2,
-        -2
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "building_B_withoutBase",
-      "id": "4a86d2f4-cf92-438c-8e45-82e8b6937763",
-      "position": [
-        -22,
-        0.2,
-        -2
       ],
       "rotationY": 0
     },
@@ -623,9 +413,9 @@
       },
       "id": "d354a0b7-ced6-4801-9cc7-30eb18a851ca",
       "position": [
-        -1.5,
+        0.3,
         0.2,
-        -14.3
+        -14.6
       ],
       "rotationY": 0
     },
@@ -634,11 +424,402 @@
       "id": "3c94bd76-878d-42c7-878d-a3bc3d16b9cc",
       "imageUrl": "/assets/ads/github.png",
       "position": [
-        0,
+        2,
         6.7,
         -18
       ],
       "rotationY": 0
+    },
+    {
+      "asset": "building_F_withoutBase",
+      "id": "b15d2b95-5430-4e46-8aaa-119404f3a7fb",
+      "position": [
+        -13,
+        0,
+        -18
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_A_withoutBase",
+      "id": "eef2b69b-955d-42d4-bcc4-c2ae8e6aaa24",
+      "position": [
+        -19.2,
+        0.2,
+        -18
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "6a03b1b3-7530-483b-9c90-b1bc6461330f",
+      "position": [
+        -24,
+        -0.2,
+        -8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "f3f6d58b-e848-4368-956b-08e24c4b4b4f",
+      "position": [
+        -24,
+        -0.2,
+        -16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "1bd79296-27fa-4480-9c33-e5acc63d7d2f",
+      "position": [
+        -24,
+        -0.2,
+        8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_F_withoutBase",
+      "id": "74419c5c-e6ae-4878-9294-abfdc1b70cc5",
+      "position": [
+        9,
+        0.2,
+        -18
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "streetlight",
+      "id": "7bad55ce-54d0-4fef-b4d2-1d3cc7bfdb5a",
+      "position": [
+        5,
+        0.2,
+        -16
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "base",
+      "id": "54d828ff-5771-4df2-ab4d-9c0ed6ff9661",
+      "position": [
+        8,
+        -0.2,
+        -16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "a2fe697d-d46f-46fe-9a78-371e24faa0cf",
+      "position": [
+        16,
+        -0.2,
+        -16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_H_withoutBase",
+      "id": "4b3b90b1-f6d8-416e-a046-aa4b88c53849",
+      "position": [
+        16,
+        0.2,
+        -18
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_A_withoutBase",
+      "id": "fb02465d-c438-4282-815b-195c8f04c800",
+      "position": [
+        -19.2,
+        0.2,
+        -5
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "streetlight",
+      "id": "179a7f72-186f-45ac-9f67-067de3e98556",
+      "position": [
+        -16.5,
+        0.2,
+        -7.8
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "building_G_withoutBase",
+      "id": "09f7fcee-71be-4435-9fcd-e1da7fd26422",
+      "position": [
+        -18.2,
+        0.2,
+        2
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "streetlight",
+      "id": "9a1e1140-9bdb-4784-913f-9ec93037ba0b",
+      "position": [
+        -16.5,
+        0.2,
+        -2.1
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "building_G_withoutBase",
+      "id": "07cb65db-d48f-43e2-ad94-e0697faa8bec",
+      "position": [
+        -18.2,
+        0.2,
+        9.4
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "road_straight",
+      "id": "043b070d-2968-4f17-968e-7a27262c9582",
+      "position": [
+        24,
+        -0.1,
+        -16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "b3699fb2-fe35-4573-84eb-fef73a13688e",
+      "position": [
+        8,
+        -0.2,
+        16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "d0eb12fd-d5cf-4f95-b293-c4d0e3cae213",
+      "position": [
+        0,
+        -0.2,
+        16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "b7c296de-a3b1-436f-8f9c-6e7923e65361",
+      "position": [
+        16,
+        -0.2,
+        16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "43f6a87b-b4a0-4fa1-b6e4-c001f730331e",
+      "position": [
+        24,
+        -0.2,
+        16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "24f143b4-767b-443f-8a61-debf04ea24ab",
+      "position": [
+        32,
+        -0.2,
+        16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "35e0eb5d-4323-44bb-b311-4ad811d50828",
+      "position": [
+        32,
+        -0.2,
+        8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "16eaaed7-8983-47cb-9799-78eaa7975fdd",
+      "position": [
+        32,
+        -0.2,
+        0
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "6d33c0ee-228b-483c-bd34-209feb4d239d",
+      "position": [
+        32,
+        -0.2,
+        -8
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "b619f411-d7f0-453d-9bde-8d706d3eecc9",
+      "position": [
+        32,
+        -0.2,
+        -16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "road_straight",
+      "id": "f71941f3-1697-4992-b650-8cec3b2b4f8e",
+      "position": [
+        -8,
+        -0.1,
+        16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "2821d17e-3ae7-4666-8755-5bdd7c98cc57",
+      "position": [
+        -16,
+        -0.2,
+        16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "base",
+      "id": "ae8b522b-f4bc-4e9e-974c-b4e3d59a4f70",
+      "position": [
+        -24,
+        -0.2,
+        16
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "building_G_withoutBase",
+      "id": "42b64702-8f8c-4a69-8a2e-9cef5c9b907c",
+      "position": [
+        -16.2,
+        0.2,
+        17.4
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "building_G_withoutBase",
+      "id": "b210396c-1fa6-425f-b1d0-e556cad431ba",
+      "position": [
+        -0.2,
+        0.2,
+        17.4
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "building_F_withoutBase",
+      "id": "5dba5388-05c1-4f79-a333-82bae73bef17",
+      "position": [
+        8.2,
+        0.2,
+        17.4
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "building_H_withoutBase",
+      "id": "d4fde8b8-df4a-4764-aefb-af70f57e1490",
+      "position": [
+        16.2,
+        0.2,
+        17.4
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "building_G_withoutBase",
+      "id": "b338dfe8-02f1-4037-9893-ea8801ca3275",
+      "position": [
+        24.2,
+        0.2,
+        17.4
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "billboard_16_9",
+      "id": "93b45c63-222b-41c6-b37f-c5d55e04aac3",
+      "imageUrl": "/assets/ads/github.png",
+      "position": [
+        -18,
+        8,
+        3
+      ],
+      "rotationY": 1.5707963267948966
+    },
+    {
+      "asset": "building_E_withoutBase",
+      "id": "a81666a9-568c-4a4e-a3f6-586a8e6e14c9",
+      "position": [
+        30.6,
+        -0.00675678,
+        18.096
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "building_E_withoutBase",
+      "id": "dd59dfd8-44f9-4fd4-8d7f-fb095f56d204",
+      "position": [
+        33.1,
+        -0.00675678,
+        18.096
+      ],
+      "rotationY": 3.141592653589793
+    },
+    {
+      "asset": "building_D_withoutBase",
+      "id": "b6f45c2a-8484-483f-9338-891b13c9e4db",
+      "position": [
+        34.01,
+        0,
+        14.2
+      ],
+      "rotationY": -1.5707963267948966
+    },
+    {
+      "asset": "building_A_withoutBase",
+      "id": "bd7815de-b383-4215-98b5-08ceaae9e45c",
+      "position": [
+        33.3,
+        0,
+        9
+      ],
+      "rotationY": -1.5707963267948966
+    },
+    {
+      "asset": "building_B_withoutBase",
+      "id": "8744ca2e-d484-4d82-910f-5f61852ea2c6",
+      "position": [
+        33.82,
+        0,
+        4
+      ],
+      "rotationY": -1.5707963267948966
     }
   ]
 }

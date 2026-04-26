@@ -8,6 +8,8 @@ export const env = createEnv({
    */
   server: {
     AI_GATEWAY_API_KEY: z.string().optional(),
+    OPENAI_API_KEY: z.string().optional(),
+    GROQ_API_KEY: z.string().optional(),
     AI_INTERVIEW_MAX_OUTPUT_TOKENS: z.coerce
       .number()
       .int()
@@ -49,6 +51,8 @@ export const env = createEnv({
    */
   runtimeEnv: {
     AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    GROQ_API_KEY: process.env.GROQ_API_KEY,
     AI_INTERVIEW_MAX_OUTPUT_TOKENS: process.env.AI_INTERVIEW_MAX_OUTPUT_TOKENS,
     AI_INTERVIEW_MODEL: process.env.AI_INTERVIEW_MODEL,
     AI_INTERVIEW_PASS_SCORE: process.env.AI_INTERVIEW_PASS_SCORE,
