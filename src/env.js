@@ -8,14 +8,24 @@ export const env = createEnv({
    */
   server: {
     AI_GATEWAY_API_KEY: z.string().optional(),
-    OPENAI_API_KEY: z.string().optional(),
-    GROQ_API_KEY: z.string().optional(),
+    AI_PROVIDER: z
+      .enum([
+        "gateway",
+        "google",
+        "openai",
+        "anthropic",
+        "groq",
+        "openai-compatible",
+      ])
+      .default("google"),
+    AI_API_KEY: z.string().optional(),
+    AI_BASE_URL: z.string().url().optional(),
     AI_INTERVIEW_MAX_OUTPUT_TOKENS: z.coerce
       .number()
       .int()
       .positive()
       .default(1600),
-    AI_INTERVIEW_MODEL: z.string().default("openai/gpt-5.4-mini"),
+    AI_INTERVIEW_MODEL: z.string().default("gemini-2.5-flash"),
     AI_INTERVIEW_PASS_SCORE: z.coerce.number().min(0).max(100).default(72),
     AI_INTERVIEW_QUESTION_COUNT: z.coerce
       .number()
@@ -51,8 +61,9 @@ export const env = createEnv({
    */
   runtimeEnv: {
     AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-    GROQ_API_KEY: process.env.GROQ_API_KEY,
+    AI_PROVIDER: process.env.AI_PROVIDER,
+    AI_API_KEY: process.env.AI_API_KEY,
+    AI_BASE_URL: process.env.AI_BASE_URL,
     AI_INTERVIEW_MAX_OUTPUT_TOKENS: process.env.AI_INTERVIEW_MAX_OUTPUT_TOKENS,
     AI_INTERVIEW_MODEL: process.env.AI_INTERVIEW_MODEL,
     AI_INTERVIEW_PASS_SCORE: process.env.AI_INTERVIEW_PASS_SCORE,

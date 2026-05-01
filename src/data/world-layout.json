@@ -371,16 +371,6 @@
       "rotationY": 3.141592653589793
     },
     {
-      "asset": "road_straight_crossing",
-      "id": "2a65634d-afec-4fd1-818b-916c4305a4af",
-      "position": [
-        24,
-        -0.1,
-        -8
-      ],
-      "rotationY": 3.141592653589793
-    },
-    {
       "asset": "base",
       "id": "b7856f5b-75df-4f76-b09f-663024756299",
       "position": [
@@ -820,6 +810,16 @@
         4
       ],
       "rotationY": -1.5707963267948966
+    },
+    {
+      "asset": "road_straight",
+      "id": "a06dccc0-6e8d-4248-9b56-b78000fe03f0",
+      "position": [
+        24,
+        -0.1,
+        -8
+      ],
+      "rotationY": 0
     }
   ]
 }

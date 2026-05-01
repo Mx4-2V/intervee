@@ -21,7 +21,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.71",
+    "@ai-sdk/google": "^3.0.64",
+    "@ai-sdk/groq": "^3.0.35",
     "@ai-sdk/openai": "^3.0.52",
+    "@ai-sdk/openai-compatible": "^2.0.41",
     "@auth/prisma-adapter": "^2.7.2",
     "@prisma/client": "^6.6.0",
     "@react-three/drei": "^10.7.7",
@@ -34,6 +38,7 @@
     "@trpc/server": "^11.0.0",
     "ai": "^6.0.158",
     "ecctrl": "^1.0.97",
+    "jsonrepair": "^3.14.0",
     "next": "^15.2.3",
     "next-auth": "5.0.0-beta.25",
     "react": "^19.0.0",
