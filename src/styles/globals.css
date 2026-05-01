@@ -1,6 +1,48 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+  --font-sans:
+    var(--font-ubuntu), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --color-intervee-page: #f3f3f3;
+  --color-intervee-hero-from: #005d97;
+  --color-intervee-hero-to: #00426d;
+  --color-intervee-primary: #004a7c;
+  --color-intervee-surface: #004a7c;
+  --color-intervee-news: #242424;
+  --color-intervee-news-empty: #1b1b1b;
+  --color-intervee-action: #008140;
+  --color-intervee-connect: #0070c0;
+  --color-intervee-connect-hover: #0088e0;
+  --color-intervee-google: #4285f4;
+  --color-intervee-input: #d9d9d9;
+  --color-intervee-muted-link: #4b5563;
+  --color-intervee-border: #000000;
+  --color-intervee-page-soft: #eefbff;
+  --color-intervee-surface-dark: #242424;
+  --color-intervee-text-soft: #d9ecff;
+  --color-intervee-text-muted: #6b7280;
+  --color-intervee-shell: #f4f2f0;
+  --color-intervee-shell-dark: #2a2d2e;
+  --color-intervee-ink: #111827;
+  --color-intervee-card: rgb(255 255 255 / 0.78);
+  --color-intervee-card-strong: #ffffff;
+  --color-intervee-card-border: rgb(255 255 255 / 0.3);
+  --color-intervee-soft-border: rgb(229 231 235 / 0.9);
+  --color-intervee-muted: #6b7280;
+  --color-intervee-ghost: #f3f4f6;
+  --color-intervee-stage-overlay: rgb(255 255 255 / 0.2);
+
+  --shadow-intervee-logo: 3px 3px 0 rgb(0 0 0 / 0.9);
+  --shadow-intervee-panel:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-intervee-glass:
+    0 20px 60px -24px rgb(15 23 42 / 0.35),
+    0 10px 24px -16px rgb(15 23 42 / 0.22);
+
+  --spacing-intervee-page: 80rem;
+  --spacing-intervee-login: 28.125rem;
+  --spacing-intervee-news-height: 25rem;
+  --spacing-intervee-sidebar: 20rem;
 }

@@ -40,17 +40,19 @@ export function EditorPanel({
 }) {
   return (
     <>
-      <aside className="absolute top-4 left-4 z-10 flex max-h-[calc(100vh-2rem)] w-72 flex-col gap-3 overflow-y-auto rounded-xl border border-white/10 bg-black/70 p-4 text-white backdrop-blur">
-        <div className="text-sm font-semibold tracking-[0.2em] text-cyan-200 uppercase">
+      <aside className="border-intervee-border bg-intervee-surface absolute top-4 left-4 z-10 flex max-h-[calc(100vh-2rem)] w-[19rem] flex-col gap-3 overflow-y-auto border-2 p-4 text-white shadow-md">
+        <div className="text-intervee-text-soft text-sm font-semibold tracking-[0.2em] uppercase">
           Editor
         </div>
-        <div className="text-xs text-slate-300">
+        <div className="text-intervee-text-soft text-xs">
           Elige un asset y haz click en el suelo para colocarlo. El marcador
           azul indica el punto inicial del mapa.
         </div>
-        <div className="text-xs text-slate-300">Guardado: {saveStatus}</div>
+        <div className="text-intervee-text-soft text-xs">
+          Guardado: {saveStatus}
+        </div>
         <button
-          className="rounded-md bg-cyan-500 px-3 py-2 text-sm font-medium text-slate-950"
+          className="bg-intervee-connect hover:bg-intervee-connect-hover border-b-4 border-blue-900 px-3 py-2 text-sm font-semibold text-white uppercase transition"
           onClick={onSave}
           type="button"
         >
@@ -59,16 +61,16 @@ export function EditorPanel({
 
         {WORLD_EDITOR_GROUPS.map((group) => (
           <div key={group.label} className="space-y-2">
-            <div className="text-xs font-semibold tracking-[0.2em] text-slate-300 uppercase">
+            <div className="text-intervee-text-soft text-xs font-semibold tracking-[0.2em] uppercase">
               {group.label}
             </div>
             <div className="grid grid-cols-2 gap-2">
               {group.assets.map((asset) => (
                 <button
-                  className={`rounded-md px-2 py-2 text-left text-xs ${
+                  className={`border px-2 py-2 text-left text-xs font-semibold uppercase ${
                     activeAsset === asset
-                      ? "bg-cyan-300 text-slate-950"
-                      : "bg-white/10 text-slate-100"
+                      ? "border-intervee-border bg-intervee-page-soft text-intervee-primary"
+                      : "border-white/15 bg-black/20 text-white"
                   }`}
                   key={asset}
                   onClick={() => onSelectAsset(asset)}
@@ -82,17 +84,17 @@ export function EditorPanel({
         ))}
       </aside>
 
-      <aside className="absolute top-4 right-4 z-10 flex w-72 flex-col gap-3 rounded-xl border border-white/10 bg-black/70 p-4 text-white backdrop-blur">
-        <div className="text-sm font-semibold tracking-[0.2em] text-cyan-200 uppercase">
+      <aside className="border-intervee-border bg-intervee-surface absolute top-4 right-4 z-10 flex w-[19rem] flex-col gap-3 border-2 p-4 text-white shadow-md">
+        <div className="text-intervee-text-soft text-sm font-semibold tracking-[0.2em] uppercase">
           Seleccion
         </div>
         {selectedItem ? (
           <>
-            <div className="text-sm text-slate-100">{selectedItem.asset}</div>
-            <label className="text-xs text-slate-300">
+            <div className="text-sm text-white">{selectedItem.asset}</div>
+            <label className="text-intervee-text-soft text-xs">
               X
               <input
-                className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
                 onChange={(event) =>
                   onUpdateSelectedItem("x", Number(event.target.value))
                 }
@@ -100,10 +102,10 @@ export function EditorPanel({
                 value={selectedItem.position[0]}
               />
             </label>
-            <label className="text-xs text-slate-300">
+            <label className="text-intervee-text-soft text-xs">
               Y
               <input
-                className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
                 onChange={(event) =>
                   onUpdateSelectedItem("y", Number(event.target.value))
                 }
@@ -111,10 +113,10 @@ export function EditorPanel({
                 value={selectedItem.position[1]}
               />
             </label>
-            <label className="text-xs text-slate-300">
+            <label className="text-intervee-text-soft text-xs">
               Z
               <input
-                className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
                 onChange={(event) =>
                   onUpdateSelectedItem("z", Number(event.target.value))
                 }
@@ -123,10 +125,10 @@ export function EditorPanel({
               />
             </label>
             {selectedItem.asset === "billboard_16_9" ? (
-              <label className="text-xs text-slate-300">
+              <label className="text-intervee-text-soft text-xs">
                 Imagen
                 <select
-                  className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                  className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
                   onChange={(event) =>
                     onUpdateSelectedImageUrl(event.target.value)
                   }
@@ -142,10 +144,10 @@ export function EditorPanel({
             ) : null}
             {selectedItem.asset === "company_portal" ? (
               <>
-                <label className="text-xs text-slate-300">
+                <label className="text-intervee-text-soft text-xs">
                   Empresa
                   <input
-                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
                     onChange={(event) =>
                       onUpdateSelectedCompanyPortalField(
                         "companyName",
@@ -158,10 +160,10 @@ export function EditorPanel({
                     }
                   />
                 </label>
-                <label className="text-xs text-slate-300">
+                <label className="text-intervee-text-soft text-xs">
                   Slug
                   <input
-                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
                     onChange={(event) =>
                       onUpdateSelectedCompanyPortalField(
                         "companySlug",
@@ -174,10 +176,10 @@ export function EditorPanel({
                     }
                   />
                 </label>
-                <label className="text-xs text-slate-300">
+                <label className="text-intervee-text-soft text-xs">
                   Ruta
                   <input
-                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
                     onChange={(event) =>
                       onUpdateSelectedCompanyPortalField(
                         "companyRoute",
@@ -191,10 +193,10 @@ export function EditorPanel({
                     }
                   />
                 </label>
-                <label className="text-xs text-slate-300">
+                <label className="text-intervee-text-soft text-xs">
                   Documento
                   <input
-                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
                     onChange={(event) =>
                       onUpdateSelectedCompanyPortalField(
                         "documentKey",
@@ -207,10 +209,10 @@ export function EditorPanel({
                     }
                   />
                 </label>
-                <label className="text-xs text-slate-300">
+                <label className="text-intervee-text-soft text-xs">
                   Logo
                   <select
-                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
                     onChange={(event) =>
                       onUpdateSelectedCompanyPortalField(
                         "logoUrl",
@@ -229,10 +231,10 @@ export function EditorPanel({
                     ))}
                   </select>
                 </label>
-                <label className="text-xs text-slate-300">
+                <label className="text-intervee-text-soft text-xs">
                   Radio de activacion
                   <input
-                    className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm"
+                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
                     min={1}
                     onChange={(event) =>
                       onUpdateSelectedCompanyPortalField(
@@ -245,10 +247,10 @@ export function EditorPanel({
                     value={selectedItem.companyPortal?.activationRadius ?? 3.2}
                   />
                 </label>
-                <label className="text-xs text-slate-300">
+                <label className="text-intervee-text-soft text-xs">
                   Color
                   <input
-                    className="mt-1 h-10 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2"
+                    className="bg-intervee-page border-intervee-border mt-1 h-10 w-full border px-2 py-2"
                     onChange={(event) =>
                       onUpdateSelectedCompanyPortalField(
                         "themeColor",
@@ -263,14 +265,14 @@ export function EditorPanel({
             ) : null}
             <div className="grid grid-cols-2 gap-2">
               <button
-                className="rounded-md bg-white/10 px-3 py-2 text-sm"
+                className="border border-white/15 bg-black/20 px-3 py-2 text-sm font-semibold text-white uppercase"
                 onClick={() => onNudgeRotation(-Math.PI / 2)}
                 type="button"
               >
                 Rotar -90
               </button>
               <button
-                className="rounded-md bg-white/10 px-3 py-2 text-sm"
+                className="border border-white/15 bg-black/20 px-3 py-2 text-sm font-semibold text-white uppercase"
                 onClick={() => onNudgeRotation(Math.PI / 2)}
                 type="button"
               >
@@ -279,14 +281,14 @@ export function EditorPanel({
             </div>
             <div className="grid grid-cols-2 gap-2">
               <button
-                className="rounded-md bg-cyan-300 px-3 py-2 text-sm text-slate-950"
+                className="bg-intervee-connect hover:bg-intervee-connect-hover border-b-4 border-blue-900 px-3 py-2 text-sm font-semibold text-white uppercase transition"
                 onClick={onDuplicateSelected}
                 type="button"
               >
                 Duplicar
               </button>
               <button
-                className="rounded-md bg-rose-500 px-3 py-2 text-sm"
+                className="bg-intervee-news border-intervee-border border-b-4 px-3 py-2 text-sm font-semibold text-white uppercase"
                 onClick={onDeleteSelected}
                 type="button"
               >
@@ -295,7 +297,7 @@ export function EditorPanel({
             </div>
           </>
         ) : (
-          <div className="text-sm text-slate-300">
+          <div className="text-intervee-text-soft text-sm">
             Selecciona un objeto en la escena.
           </div>
         )}

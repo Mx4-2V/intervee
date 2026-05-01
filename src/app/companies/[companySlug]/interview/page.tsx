@@ -23,7 +23,6 @@ export default async function CompanyInterviewPage({ params }: PageProps) {
       location={company.location}
       logoUrl={company.logoUrl}
       roleTitle={company.roleTitle}
-      themeColor={company.themeColor}
     />
   );
 }

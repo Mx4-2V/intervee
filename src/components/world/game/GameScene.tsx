@@ -91,20 +91,20 @@ export function GameScene() {
   return (
     <div className="relative h-full w-full">
       {SHOW_COORDS ? (
-        <div className="pointer-events-none absolute top-4 left-4 z-10 rounded-md bg-black/55 px-3 py-2 font-mono text-sm text-white">
+        <div className="border-intervee-border pointer-events-none absolute top-4 left-4 z-10 border bg-black/65 px-3 py-2 font-mono text-sm text-white shadow-md">
           {`x: ${playerPosition.x} y: ${playerPosition.y} z: ${playerPosition.z}`}
         </div>
       ) : null}
 
       {nearbyPortal ? (
-        <div className="pointer-events-none absolute top-4 right-4 z-10 max-w-xs rounded-2xl border border-cyan-300/30 bg-slate-950/85 px-4 py-3 text-sm text-slate-100 shadow-2xl shadow-cyan-950/40 backdrop-blur">
-          <div className="text-[11px] tracking-[0.28em] text-cyan-200 uppercase">
+        <div className="border-intervee-border bg-intervee-surface pointer-events-none absolute top-4 right-4 z-10 max-w-xs border-2 px-4 py-3 text-sm text-white shadow-md">
+          <div className="text-intervee-text-soft text-[11px] tracking-[0.28em] uppercase">
             Portal activo
           </div>
           <div className="mt-1 text-lg font-semibold text-white">
             {nearbyPortal.companyPortal.companyName}
           </div>
-          <p className="mt-1 text-sm text-slate-300">
+          <p className="text-intervee-text-soft mt-1 text-sm">
             Entra al circulo para iniciar la entrevista 2D.
           </p>
         </div>
