@@ -11,6 +11,21 @@ import type {
   InterviewQuestionsApiResponse,
 } from "~/lib/interview-schema";
 
+// --- NUEVO COMPONENTE DE CARGA ---
+function InterviewLoader({ companyName }: { companyName: string }) {
+  return (
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#004a77] text-white">
+      <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+      <h2 className="mt-8 text-2xl font-bold animate-pulse tracking-widest uppercase">
+        Preparando Entrevista
+      </h2>
+      <p className="mt-2 text-blue-200/70 text-sm font-medium">
+        Generando simulacion para {companyName}...
+      </p>
+    </div>
+  );
+}
+
 type CompanyInterviewExperienceProps = {
   companyName: string;
   companySlug: string;
@@ -231,6 +246,9 @@ export function CompanyInterviewExperience({
 
   return (
     <main className="bg-intervee-page text-intervee-ink min-h-screen">
+      {/* 1. MOSTRAR LOADER CUANDO CARGAN LAS PREGUNTAS */}
+      {isLoadingQuestions && <InterviewLoader companyName={companyName} />}
+
       <div>
         <header className="from-intervee-hero-from to-intervee-hero-to border-intervee-border sticky top-0 z-40 border-b-2 bg-linear-to-b text-white shadow-xl">
           <div className="max-w-intervee-page mx-auto flex items-center justify-between gap-4 px-4 py-4 sm:px-6">
@@ -363,6 +381,7 @@ export function CompanyInterviewExperience({
   );
 }
 
+// --- RESTO DE LOS COMPONENTES (Intro, Stats, etc.) SE MANTIENEN IGUAL ---
 function InterviewIntro({
   companyName,
   description,
@@ -463,6 +482,7 @@ function InterviewIntro({
   );
 }
 
+// ... (Las demás funciones InterviewConversation, InterviewResults, etc. se mantienen igual que en tu archivo original)
 function InterviewConversation({
   companyName,
   currentAnswer,
