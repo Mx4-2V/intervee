@@ -4,6 +4,7 @@ import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import type {
   InterviewEvaluationResponse,
@@ -11,7 +12,7 @@ import type {
   InterviewQuestionsApiResponse,
 } from "~/lib/interview-schema";
 
-// --- NUEVO COMPONENTE DE CARGA ---
+// --- COMPONENTE DE CARGA PARA INICIO ---
 function InterviewLoader({ companyName }: { companyName: string }) {
   return (
     <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#004a77] text-white">
@@ -21,6 +22,21 @@ function InterviewLoader({ companyName }: { companyName: string }) {
       </h2>
       <p className="mt-2 text-blue-200/70 text-sm font-medium">
         Generando simulacion para {companyName}...
+      </p>
+    </div>
+  );
+}
+
+// --- NUEVO COMPONENTE DE CARGA PARA SALIDA ---
+function ExitLoader() {
+  return (
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#004a77] text-white">
+      <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+      <h2 className="mt-8 text-2xl font-bold animate-pulse tracking-widest uppercase">
+        Volviendo al Mundo
+      </h2>
+      <p className="mt-2 text-blue-200/70 text-sm font-medium">
+        Sincronizando progreso...
       </p>
     </div>
   );
@@ -59,6 +75,8 @@ export function CompanyInterviewExperience({
   logoUrl,
   roleTitle,
 }: CompanyInterviewExperienceProps) {
+  const router = useRouter();
+  
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +84,7 @@ export function CompanyInterviewExperience({
     useState<InterviewEvaluationResponse | null>(null);
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
   const [phase, setPhase] = useState<InterviewPhase>("intro");
   const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
   const [startedAt, setStartedAt] = useState<number | null>(null);
@@ -84,6 +103,13 @@ export function CompanyInterviewExperience({
       window.clearInterval(timerId);
     };
   }, [startedAt]);
+
+  const handleExitToWorld = () => {
+    setIsExiting(true);
+    setTimeout(() => {
+      router.push("/game");
+    }, 600);
+  };
 
   const currentQuestion = questions[currentQuestionIndex] ?? null;
   const currentAnswer = currentQuestion
@@ -246,8 +272,11 @@ export function CompanyInterviewExperience({
 
   return (
     <main className="bg-intervee-page text-intervee-ink min-h-screen">
-      {/* 1. MOSTRAR LOADER CUANDO CARGAN LAS PREGUNTAS */}
+      {/* LOADER DE INICIO */}
       {isLoadingQuestions && <InterviewLoader companyName={companyName} />}
+      
+      {/* LOADER DE SALIDA */}
+      {isExiting && <ExitLoader />}
 
       <div>
         <header className="from-intervee-hero-from to-intervee-hero-to border-intervee-border sticky top-0 z-40 border-b-2 bg-linear-to-b text-white shadow-xl">
@@ -274,12 +303,13 @@ export function CompanyInterviewExperience({
                 <p className="text-sm font-bold">{roleTitle}</p>
                 <p className="text-xs text-white/70">{location}</p>
               </div>
-              <Link
-                className="bg-intervee-action border-intervee-border flex h-10 w-10 items-center justify-center rounded border-b-4 text-white transition hover:brightness-110"
-                href="/game"
+              <button
+                className="bg-intervee-action border-intervee-border flex h-10 w-10 items-center justify-center rounded border-b-4 text-white transition hover:brightness-110 cursor-pointer"
+                onClick={handleExitToWorld}
+                type="button"
               >
                 <ArrowLeftIcon />
-              </Link>
+              </button>
             </div>
           </div>
         </header>
@@ -294,6 +324,7 @@ export function CompanyInterviewExperience({
               location={location}
               logoUrl={logoUrl}
               onStart={() => void loadQuestions()}
+              onExit={handleExitToWorld}
               roleTitle={roleTitle}
             />
           ) : null}
@@ -354,6 +385,7 @@ export function CompanyInterviewExperience({
                     <InterviewResults
                       evaluation={evaluation}
                       onRestart={() => void restartInterview()}
+                      onExit={handleExitToWorld}
                       questions={questions}
                     />
                   ) : null}
@@ -381,7 +413,6 @@ export function CompanyInterviewExperience({
   );
 }
 
-// --- RESTO DE LOS COMPONENTES (Intro, Stats, etc.) SE MANTIENEN IGUAL ---
 function InterviewIntro({
   companyName,
   description,
@@ -390,6 +421,7 @@ function InterviewIntro({
   location,
   logoUrl,
   onStart,
+  onExit,
   roleTitle,
 }: {
   companyName: string;
@@ -399,6 +431,7 @@ function InterviewIntro({
   location: string;
   logoUrl: string;
   onStart: () => void;
+  onExit: () => void;
   roleTitle: string;
 }) {
   return (
@@ -464,12 +497,13 @@ function InterviewIntro({
               ? "Preparando entrevista..."
               : "Iniciar entrevista"}
           </button>
-          <Link
-            className="border border-white/20 bg-white/10 px-6 py-3 text-center text-sm font-semibold text-white uppercase transition hover:bg-white/15"
-            href="/game"
+          <button
+            className="border border-white/20 bg-white/10 px-6 py-3 text-center text-sm font-semibold text-white uppercase transition hover:bg-white/15 cursor-pointer"
+            onClick={onExit}
+            type="button"
           >
             Volver al mundo
-          </Link>
+          </button>
         </div>
 
         {error ? (
@@ -482,7 +516,6 @@ function InterviewIntro({
   );
 }
 
-// ... (Las demás funciones InterviewConversation, InterviewResults, etc. se mantienen igual que en tu archivo original)
 function InterviewConversation({
   companyName,
   currentAnswer,
@@ -598,10 +631,12 @@ function InterviewConversation({
 function InterviewResults({
   evaluation,
   onRestart,
+  onExit,
   questions,
 }: {
   evaluation: InterviewEvaluationResponse;
   onRestart: () => void;
+  onExit: () => void;
   questions: InterviewQuestion[];
 }) {
   return (
@@ -672,12 +707,13 @@ function InterviewResults({
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
-          <Link
-            className="bg-intervee-connect hover:bg-intervee-connect-hover border-b-4 border-blue-900 px-5 py-3 text-center text-sm font-semibold text-white uppercase transition"
-            href="/game"
+          <button
+            className="bg-intervee-connect hover:bg-intervee-connect-hover border-b-4 border-blue-900 px-5 py-3 text-center text-sm font-semibold text-white uppercase transition cursor-pointer"
+            onClick={onExit}
+            type="button"
           >
             Volver al mundo
-          </Link>
+          </button>
           <button
             className="border-intervee-border bg-intervee-page-soft border px-5 py-3 text-sm font-semibold text-gray-700 uppercase transition hover:bg-white"
             onClick={onRestart}
