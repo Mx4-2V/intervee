@@ -1,9 +1,8 @@
 "use client";
 
-import { startTransition, useEffect, useMemo, useRef, useState } from "react";
-
+// 1. Importamos Suspense de React
+import { startTransition, useEffect, useMemo, useRef, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
-
 import { Physics } from "@react-three/rapier";
 import { Canvas } from "@react-three/fiber";
 
@@ -15,6 +14,8 @@ import { WorldEnvironment } from "~/components/world/shared/WorldEnvironment";
 import { PhysicsWorldItems } from "~/components/world/shared/WorldItems";
 import { useWorldLayoutData } from "~/hooks/use-world-layout-data";
 import { isCompanyPortalItem } from "~/lib/world-layout";
+
+import WorldLoader from "../WorldLoader"; 
 
 export function GameScene() {
   const router = useRouter();
@@ -111,12 +112,15 @@ export function GameScene() {
       ) : null}
 
       <Canvas orthographic camera={camera} dpr={[1, 1.5]} shadows>
-        <WorldEnvironment editorEnabled={false} />
-        <Physics gravity={[0, -20, 0]}>
-          <GroundCollider />
-          <PhysicsWorldItems items={items} />
-          <GamePlayer onPositionChange={setPlayerPosition} />
-        </Physics>
+        {/* 3. Envolvemos el contenido con Suspense */}
+        <Suspense fallback={<WorldLoader />}>
+          <WorldEnvironment editorEnabled={false} />
+          <Physics gravity={[0, -20, 0]}>
+            <GroundCollider />
+            <PhysicsWorldItems items={items} />
+            <GamePlayer onPositionChange={setPlayerPosition} />
+          </Physics>
+        </Suspense>
       </Canvas>
     </div>
   );
