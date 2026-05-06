@@ -18,8 +18,7 @@ export const BILLBOARD_IMAGE_OPTIONS = [
 
 export const COMPANY_PORTAL_LOGO_OPTIONS = [
   "/assets/logos/microsoft.png",
-  "/assets/logos/github.png"
-  
+  "/assets/logos/github.png",
 ] as const;
 
 const BUILDING_SCALE = 1.5;

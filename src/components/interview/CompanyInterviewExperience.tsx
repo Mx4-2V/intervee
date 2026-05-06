@@ -3,7 +3,6 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import type {
@@ -865,14 +864,9 @@ function ResultGroup({
       ? "border-intervee-border bg-intervee-page-soft"
       : "border-intervee-border bg-white";
 
-  const headingClasses =
-    tone === "positive" ? "text-intervee-primary" : "text-intervee-primary";
-
   return (
     <div className={`rounded-2xl border p-5 ${toneClasses}`}>
-      <div
-        className={`text-xs font-semibold tracking-[0.18em] uppercase ${headingClasses}`}
-      >
+      <div className="text-intervee-primary text-xs font-semibold tracking-[0.18em] uppercase">
         {title}
       </div>
       <ul className="mt-3 space-y-2 text-sm text-gray-700">
