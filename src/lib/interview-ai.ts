@@ -8,14 +8,18 @@ import { jsonrepair } from "jsonrepair";
 import { type ZodType, z } from "zod";
 
 import { env } from "~/env";
-import { getCompanyInterviewProfile } from "~/lib/company-interviews";
+import {
+  getCompanyInterviewProfile,
+  type ResolvedCompanyInterviewProfile,
+} from "~/server/company-interviews";
+import { db } from "~/server/db";
 import {
   type InterviewAnswer,
   type InterviewQuestion,
   type InterviewQuestionReview,
   interviewEvaluationModelSchema,
   interviewQuestionSchema,
-  interviewQuestionsResponseSchema,
+  type interviewQuestionsResponseSchema,
 } from "~/lib/interview-schema";
 
 const DEFAULT_REVIEW_FEEDBACK =
@@ -23,41 +27,118 @@ const DEFAULT_REVIEW_FEEDBACK =
 const DEFAULT_EVALUATION_SUMMARY =
   "Evaluacion generada sin resumen explicito.";
 const MAX_AI_GENERATION_ATTEMPTS = 3;
+const AI_PROVIDERS = [
+  "gateway",
+  "google",
+  "openai",
+  "anthropic",
+  "groq",
+  "openai-compatible",
+] as const;
+
+type AiProvider = (typeof AI_PROVIDERS)[number];
+
+type LlmConfig = {
+  baseUrl?: string | null;
+  maxOutputTokens: number;
+  model: string;
+  provider: AiProvider;
+  temperature: number;
+};
+
+const DEFAULT_LLM_CONFIG: LlmConfig = {
+  baseUrl: null,
+  maxOutputTokens: 1600,
+  model: "gemini-2.5-flash",
+  provider: "google",
+  temperature: 0.35,
+};
+
 const generatedInterviewQuestionsResponseSchema = z.object({
   questions: z.array(interviewQuestionSchema).min(1).max(8),
 });
 
-function ensureAiCredentials() {
-  if (env.AI_PROVIDER === "gateway") {
+function isAiProvider(value: string): value is AiProvider {
+  return AI_PROVIDERS.includes(value as AiProvider);
+}
+
+function getProviderApiKey(provider: AiProvider) {
+  switch (provider) {
+    case "gateway":
+      return env.AI_GATEWAY_API_KEY;
+    case "google":
+      return env.GOOGLE_AI_API_KEY;
+    case "openai":
+      return env.OPENAI_AI_API_KEY;
+    case "anthropic":
+      return env.ANTHROPIC_AI_API_KEY;
+    case "groq":
+      return env.GROQ_AI_API_KEY;
+    case "openai-compatible":
+      return env.OPENAI_COMPATIBLE_AI_API_KEY;
+  }
+}
+
+function getProviderApiKeyName(provider: AiProvider) {
+  if (provider === "gateway") return "AI_GATEWAY_API_KEY";
+  return `${provider.toUpperCase().replaceAll("-", "_")}_AI_API_KEY`;
+}
+
+async function getGlobalLlmConfig(): Promise<LlmConfig> {
+  try {
+    const config = await db.globalLlmConfig.findUnique({
+      where: { id: "global" },
+    });
+
+    if (config && isAiProvider(config.provider)) {
+      return {
+        baseUrl: config.baseUrl,
+        maxOutputTokens: config.maxOutputTokens,
+        model: config.model,
+        provider: config.provider,
+        temperature: config.temperature,
+      };
+    }
+  } catch {
+    // Keep env-based AI working before migrations or when the database is unavailable.
+  }
+
+  return DEFAULT_LLM_CONFIG;
+}
+
+function ensureAiCredentials(config: LlmConfig) {
+  if (config.provider === "gateway") {
     if (!env.AI_GATEWAY_API_KEY && !process.env.VERCEL) {
       throw new Error(
         "Missing AI credentials. Set AI_GATEWAY_API_KEY or run on Vercel with AI Gateway auth.",
       );
     }
 
-    if (!env.AI_INTERVIEW_MODEL.includes("/")) {
+    if (!config.model.includes("/")) {
       throw new Error(
-        "AI_INTERVIEW_MODEL must use provider/model format when AI_PROVIDER is 'gateway', for example 'google/gemini-2.5-flash'.",
+        "AI Gateway models must use provider/model format, for example 'google/gemini-2.5-flash'. Configure this in /admin/settings/llm.",
       );
     }
 
     return;
   }
 
-  if (!env.AI_API_KEY) {
+  const apiKey = getProviderApiKey(config.provider);
+
+  if (!apiKey) {
     throw new Error(
-      `Missing AI_API_KEY for provider '${env.AI_PROVIDER}'. Set AI_API_KEY in .env.`,
+      `Missing API key for provider '${config.provider}'. Set ${getProviderApiKeyName(config.provider)} in .env.`,
     );
   }
 
-  if (env.AI_PROVIDER === "openai-compatible" && !env.AI_BASE_URL) {
+  if (config.provider === "openai-compatible" && !config.baseUrl) {
     throw new Error(
-      "AI_BASE_URL is required when AI_PROVIDER is 'openai-compatible'.",
+      "Base URL is required when the global LLM provider is 'openai-compatible'. Configure this in /admin/settings/llm.",
     );
   }
 }
 
-function getModelName(provider: typeof env.AI_PROVIDER) {
+function getModelName(provider: AiProvider, model: string) {
   const prefixes = {
     anthropic: "anthropic/",
     google: "google/",
@@ -70,61 +151,62 @@ function getModelName(provider: typeof env.AI_PROVIDER) {
   const prefix = prefixes[provider];
 
   if (!prefix) {
-    return env.AI_INTERVIEW_MODEL;
+    return model;
   }
 
-  return env.AI_INTERVIEW_MODEL.startsWith(prefix)
-    ? env.AI_INTERVIEW_MODEL.slice(prefix.length)
-    : env.AI_INTERVIEW_MODEL;
+  return model.startsWith(prefix) ? model.slice(prefix.length) : model;
 }
 
-function getInterviewModel() {
-  ensureAiCredentials();
+function getInterviewModel(config: LlmConfig) {
+  ensureAiCredentials(config);
 
-  switch (env.AI_PROVIDER) {
+  const apiKey = getProviderApiKey(config.provider);
+  const baseURL = config.baseUrl ?? undefined;
+
+  switch (config.provider) {
     case "gateway": {
-      return gateway(env.AI_INTERVIEW_MODEL);
+      return gateway(config.model);
     }
     case "google": {
       const google = createGoogleGenerativeAI({
-        apiKey: env.AI_API_KEY,
-        ...(env.AI_BASE_URL ? { baseURL: env.AI_BASE_URL } : {}),
+        apiKey,
+        ...(baseURL ? { baseURL } : {}),
       });
 
-      return google(getModelName("google"));
+      return google(getModelName("google", config.model));
     }
     case "openai": {
       const openai = createOpenAI({
-        apiKey: env.AI_API_KEY,
-        ...(env.AI_BASE_URL ? { baseURL: env.AI_BASE_URL } : {}),
+        apiKey,
+        ...(baseURL ? { baseURL } : {}),
       });
 
-      return openai(getModelName("openai"));
+      return openai(getModelName("openai", config.model));
     }
     case "anthropic": {
       const anthropic = createAnthropic({
-        apiKey: env.AI_API_KEY,
-        ...(env.AI_BASE_URL ? { baseURL: env.AI_BASE_URL } : {}),
+        apiKey,
+        ...(baseURL ? { baseURL } : {}),
       });
 
-      return anthropic(getModelName("anthropic"));
+      return anthropic(getModelName("anthropic", config.model));
     }
     case "groq": {
       const groq = createGroq({
-        apiKey: env.AI_API_KEY,
-        ...(env.AI_BASE_URL ? { baseURL: env.AI_BASE_URL } : {}),
+        apiKey,
+        ...(baseURL ? { baseURL } : {}),
       });
 
-      return groq(getModelName("groq"));
+      return groq(getModelName("groq", config.model));
     }
     case "openai-compatible": {
       const provider = createOpenAICompatible({
-        apiKey: env.AI_API_KEY,
-        baseURL: env.AI_BASE_URL!,
+        apiKey,
+        baseURL: config.baseUrl!,
         name: "openai-compatible",
       });
 
-      return provider.chatModel(getModelName("openai-compatible"));
+      return provider.chatModel(getModelName("openai-compatible", config.model));
     }
   }
 }
@@ -350,7 +432,7 @@ function parseGeneratedObject<T>(
 }
 
 function buildQuestionsPrompt(
-  company: NonNullable<ReturnType<typeof getCompanyInterviewProfile>>,
+  company: ResolvedCompanyInterviewProfile,
   questionCount: number,
   existingQuestions: InterviewQuestion[] = [],
 ) {
@@ -363,6 +445,7 @@ function buildQuestionsPrompt(
     company.documentText,
     "",
     "Generate direct interview questions for a real screening.",
+    company.questionPrompt ?? "",
     "Questions must be answerable in free text by a candidate.",
     "Each question needs a short evaluationFocus describing what you want to measure.",
     "Use pragmatic engineering language and avoid trivia.",
@@ -377,30 +460,33 @@ function buildQuestionsPrompt(
 }
 
 export async function generateCompanyInterviewQuestions(companySlug: string) {
-  const company = getCompanyInterviewProfile(companySlug);
+  const company = await getCompanyInterviewProfile(companySlug);
 
   if (!company) {
     throw new Error(`Unknown company '${companySlug}'`);
   }
 
+  const llmConfig = await getGlobalLlmConfig();
+  const model = getInterviewModel(llmConfig);
+
   let response:
     | ReturnType<typeof interviewQuestionsResponseSchema.parse>
     | undefined;
   let lastError: unknown;
-  let collectedQuestions: InterviewQuestion[] = [];
+  const collectedQuestions: InterviewQuestion[] = [];
 
   for (let attempt = 1; attempt <= MAX_AI_GENERATION_ATTEMPTS; attempt += 1) {
     try {
       const missingQuestionCount =
-        env.AI_INTERVIEW_QUESTION_COUNT - collectedQuestions.length;
+        company.questionCount - collectedQuestions.length;
 
       if (missingQuestionCount <= 0) {
         break;
       }
 
       const { text } = await generateText({
-        maxOutputTokens: env.AI_INTERVIEW_MAX_OUTPUT_TOKENS,
-        model: getInterviewModel(),
+        maxOutputTokens: company.maxOutputTokens || llmConfig.maxOutputTokens,
+        model,
         prompt: [
           buildQuestionsPrompt(company, missingQuestionCount, collectedQuestions),
           attempt > 1
@@ -408,6 +494,7 @@ export async function generateCompanyInterviewQuestions(companySlug: string) {
             : "",
         ].join("\n"),
         system:
+          (company.systemPrompt ? `${company.systemPrompt}\n\n` : "") +
           "You are a senior technical interviewer creating a structured job interview. Keep the bar serious, practical, and aligned to the supplied hiring brief.\n" +
           "MUY IMPORTANTE: Todas las preguntas, respuestas esperadas y cualquier otro texto generado debe estar en ESPAÑOL.\n\n" +
           "DEBES devolver ÚNICAMENTE un JSON válido con esta estructura:\n" +
@@ -417,7 +504,7 @@ export async function generateCompanyInterviewQuestions(companySlug: string) {
           "  ]\n" +
           "}\n" +
           "NO agregues ningún texto extra, ni saludos, ni formato markdown.",
-        temperature: env.AI_INTERVIEW_TEMPERATURE,
+        temperature: company.temperature || llmConfig.temperature,
       });
 
       const parsedResponse = parseGeneratedObject(
@@ -441,7 +528,7 @@ export async function generateCompanyInterviewQuestions(companySlug: string) {
         collectedQuestions.push(question);
       }
 
-      if (collectedQuestions.length >= env.AI_INTERVIEW_QUESTION_COUNT) {
+      if (collectedQuestions.length >= company.questionCount) {
         response = {
           questions: collectedQuestions,
         };
@@ -467,7 +554,7 @@ export async function generateCompanyInterviewQuestions(companySlug: string) {
   return {
     company,
     questions: response.questions
-      .slice(0, env.AI_INTERVIEW_QUESTION_COUNT)
+      .slice(0, company.questionCount)
       .map((question: InterviewQuestion, index: number) => ({
         ...question,
         id: question.id || `question-${index + 1}`,
@@ -479,11 +566,14 @@ export async function evaluateCompanyInterview(
   companySlug: string,
   answers: InterviewAnswer[],
 ) {
-  const company = getCompanyInterviewProfile(companySlug);
+  const company = await getCompanyInterviewProfile(companySlug);
 
   if (!company) {
     throw new Error(`Unknown company '${companySlug}'`);
   }
+
+  const llmConfig = await getGlobalLlmConfig();
+  const model = getInterviewModel(llmConfig);
 
   const prompt = [
     `Company: ${company.name}`,
@@ -504,6 +594,7 @@ export async function evaluateCompanyInterview(
     "",
     "Score each answer from 0 to 100. Be strict but fair.",
     "Summary feedback must explain whether the candidate is hireable for this specific role.",
+    company.evaluationPrompt ?? "",
   ].join("\n\n");
 
   let evaluationResult:
@@ -514,10 +605,11 @@ export async function evaluateCompanyInterview(
   for (let attempt = 1; attempt <= MAX_AI_GENERATION_ATTEMPTS; attempt += 1) {
     try {
       const { text } = await generateText({
-        maxOutputTokens: env.AI_INTERVIEW_MAX_OUTPUT_TOKENS,
-        model: getInterviewModel(),
+        maxOutputTokens: company.maxOutputTokens || llmConfig.maxOutputTokens,
+        model,
         prompt,
         system:
+          (company.systemPrompt ? `${company.systemPrompt}\n\n` : "") +
           "You are a hiring panel calibrating a pass or fail decision. Favor evidence, technical clarity, ownership, and communication. Penalize vague answers heavily.\n" +
           "MUY IMPORTANTE: Todas las evaluaciones, feedback, resúmenes y cualquier otro texto generado debe estar en ESPAÑOL.\n\n" +
           "DEBES devolver ÚNICAMENTE un JSON válido con esta estructura:\n" +
@@ -531,7 +623,7 @@ export async function evaluateCompanyInterview(
           "  ]\n" +
           "}\n" +
           "NO agregues ningún texto extra, ni saludos, ni formato markdown.",
-        temperature: env.AI_INTERVIEW_TEMPERATURE,
+        temperature: company.temperature || llmConfig.temperature,
       });
 
       const parsedEvaluation = parseGeneratedObject(
@@ -580,7 +672,7 @@ export async function evaluateCompanyInterview(
   });
 
   const overallScore = Math.round(evaluationResult.overallScore);
-  const passed = overallScore >= env.AI_INTERVIEW_PASS_SCORE;
+  const passed = overallScore >= company.passScore;
 
   return {
     company,
@@ -588,7 +680,7 @@ export async function evaluateCompanyInterview(
       companyName: company.name,
       hiringSignals: evaluationResult.hiringSignals,
       overallScore,
-      passScore: env.AI_INTERVIEW_PASS_SCORE,
+      passScore: company.passScore,
       passed,
       questionReviews,
       recommendation: passed ? "apto" : "no_apto",

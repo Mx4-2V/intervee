@@ -4,13 +4,20 @@ export type CompanyInterviewProfile = {
   documentKey: string;
   documentTitle: string;
   documentText: string;
+  evaluationPrompt?: string | null;
   interviewRoute: string;
   location: string;
   logoUrl: string;
+  maxOutputTokens: number;
   name: string;
   portalRadius: number;
+  passScore: number;
+  questionCount: number;
+  questionPrompt?: string | null;
   roleTitle: string;
   slug: string;
+  systemPrompt?: string | null;
+  temperature: number;
   themeColor: string;
 };
 
@@ -64,13 +71,20 @@ export const COMPANY_INTERVIEW_PROFILES = {
     documentKey: "microsoft",
     documentText: microsoftSoftwareEngineerDocument,
     documentTitle: "Microsoft Software Engineer Interview Brief",
+    evaluationPrompt: null,
     interviewRoute: "/companies/microsoft/interview",
     location: "Redmond / Remoto hibrido",
     logoUrl: "/assets/logos/microsoft.png",
+    maxOutputTokens: 1600,
     name: "Microsoft",
+    passScore: 72,
     portalRadius: 3.2,
+    questionCount: 5,
+    questionPrompt: null,
     roleTitle: "Software Engineer",
     slug: "microsoft",
+    systemPrompt: null,
+    temperature: 0.35,
     themeColor: "#7dd3fc",
   },
 } satisfies Record<string, CompanyInterviewProfile>;

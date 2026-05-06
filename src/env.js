@@ -8,39 +8,18 @@ export const env = createEnv({
    */
   server: {
     AI_GATEWAY_API_KEY: z.string().optional(),
-    AI_PROVIDER: z
-      .enum([
-        "gateway",
-        "google",
-        "openai",
-        "anthropic",
-        "groq",
-        "openai-compatible",
-      ])
-      .default("google"),
-    AI_API_KEY: z.string().optional(),
-    AI_BASE_URL: z.string().url().optional(),
-    AI_INTERVIEW_MAX_OUTPUT_TOKENS: z.coerce
-      .number()
-      .int()
-      .positive()
-      .default(1600),
-    AI_INTERVIEW_MODEL: z.string().default("gemini-2.5-flash"),
-    AI_INTERVIEW_PASS_SCORE: z.coerce.number().min(0).max(100).default(72),
-    AI_INTERVIEW_QUESTION_COUNT: z.coerce
-      .number()
-      .int()
-      .min(3)
-      .max(8)
-      .default(5),
-    AI_INTERVIEW_TEMPERATURE: z.coerce.number().min(0).max(2).default(0.35),
+    ANTHROPIC_AI_API_KEY: z.string().optional(),
+    GOOGLE_AI_API_KEY: z.string().optional(),
+    GROQ_AI_API_KEY: z.string().optional(),
+    OPENAI_AI_API_KEY: z.string().optional(),
+    OPENAI_COMPATIBLE_AI_API_KEY: z.string().optional(),
     AUTH_SECRET:
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
-    AUTH_DISCORD_ID: z.string().optional(),
-    AUTH_DISCORD_SECRET: z.string().optional(),
-    DATABASE_URL: z.string().url(),
+    AUTH_GOOGLE_ID: z.string().optional(),
+    AUTH_GOOGLE_SECRET: z.string().optional(),
+    DATABASE_URL: z.string().min(1),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -61,17 +40,14 @@ export const env = createEnv({
    */
   runtimeEnv: {
     AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
-    AI_PROVIDER: process.env.AI_PROVIDER,
-    AI_API_KEY: process.env.AI_API_KEY,
-    AI_BASE_URL: process.env.AI_BASE_URL,
-    AI_INTERVIEW_MAX_OUTPUT_TOKENS: process.env.AI_INTERVIEW_MAX_OUTPUT_TOKENS,
-    AI_INTERVIEW_MODEL: process.env.AI_INTERVIEW_MODEL,
-    AI_INTERVIEW_PASS_SCORE: process.env.AI_INTERVIEW_PASS_SCORE,
-    AI_INTERVIEW_QUESTION_COUNT: process.env.AI_INTERVIEW_QUESTION_COUNT,
-    AI_INTERVIEW_TEMPERATURE: process.env.AI_INTERVIEW_TEMPERATURE,
+    ANTHROPIC_AI_API_KEY: process.env.ANTHROPIC_AI_API_KEY,
+    GOOGLE_AI_API_KEY: process.env.GOOGLE_AI_API_KEY,
+    GROQ_AI_API_KEY: process.env.GROQ_AI_API_KEY,
+    OPENAI_AI_API_KEY: process.env.OPENAI_AI_API_KEY,
+    OPENAI_COMPATIBLE_AI_API_KEY: process.env.OPENAI_COMPATIBLE_AI_API_KEY,
     AUTH_SECRET: process.env.AUTH_SECRET,
-    AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
-    AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
+    AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+    AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
   },

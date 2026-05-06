@@ -6,9 +6,11 @@
   "scripts": {
     "build": "next build",
     "check": "next lint && tsc --noEmit",
+    "db:admin": "node prisma/admin.mjs",
     "db:generate": "prisma migrate dev",
     "db:migrate": "prisma migrate deploy",
     "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "dev": "next dev --turbo",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
@@ -67,6 +69,9 @@
   },
   "ct3aMetadata": {
     "initVersion": "7.40.0"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.mjs"
   },
   "packageManager": "npm@11.11.1"
 }

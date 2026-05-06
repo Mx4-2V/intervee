@@ -1,5 +1,5 @@
 import { generateCompanyInterviewQuestions } from "~/lib/interview-ai";
-import { getCompanyInterviewProfile } from "~/lib/company-interviews";
+import { getCompanyInterviewProfile } from "~/server/company-interviews";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -8,8 +8,8 @@ type RouteContext = {
   params: Promise<{ companySlug: string }>;
 };
 
-function buildFallbackQuestions(companySlug: string) {
-  const company = getCompanyInterviewProfile(companySlug);
+async function buildFallbackQuestions(companySlug: string) {
+  const company = await getCompanyInterviewProfile(companySlug);
 
   if (!company) {
     return null;
@@ -55,7 +55,7 @@ export async function POST(_: Request, { params }: RouteContext) {
     const message =
       error instanceof Error ? error.message : "Failed to generate questions";
 
-    const fallback = buildFallbackQuestions(companySlug);
+    const fallback = await buildFallbackQuestions(companySlug);
     const shouldUseFallback =
       fallback &&
       /quota|rate limit|exceeded|temporarily unavailable|overloaded/i.test(

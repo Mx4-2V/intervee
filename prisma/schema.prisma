@@ -7,8 +7,14 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "postgresql"
     url      = env("DATABASE_URL")
+}
+
+enum AdminRole {
+    OWNER
+    ADMIN
+    VIEWER
 }
 
 model Post {
@@ -60,6 +66,8 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+
+    adminAuditLogs AdminAuditLog[]
 }
 
 model VerificationToken {
@@ -68,4 +76,100 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model AdminWhitelist {
+    id        String    @id @default(cuid())
+    email     String    @unique
+    role      AdminRole @default(ADMIN)
+    isActive  Boolean   @default(true)
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+}
+
+model Company {
+    id          String   @id @default(cuid())
+    slug        String   @unique
+    name        String
+    description String
+    location    String?
+    logoUrl     String?
+    themeColor  String?
+    isActive    Boolean  @default(true)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    interviewProfiles InterviewProfile[]
+    portals           CompanyPortal[]
+
+    @@index([isActive])
+}
+
+model InterviewProfile {
+    id              String   @id @default(cuid())
+    companyId       String
+    roleTitle       String
+    documentKey     String
+    documentTitle   String
+    documentText    String
+    systemPrompt    String?
+    questionPrompt  String?
+    evaluationPrompt String?
+    questionCount   Int      @default(5)
+    passScore       Int      @default(72)
+    temperature     Float    @default(0.35)
+    maxOutputTokens Int      @default(1600)
+    isActive        Boolean  @default(true)
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+
+    company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+    @@index([companyId, isActive])
+    @@unique([companyId, documentKey])
+}
+
+model CompanyPortal {
+    id               String   @id @default(cuid())
+    companyId        String
+    activationRadius Float    @default(1.6)
+    positionX        Float
+    positionY        Float    @default(0.2)
+    positionZ        Float
+    rotationY        Float    @default(0)
+    logoUrl          String?
+    themeColor       String?
+    isActive         Boolean  @default(true)
+    createdAt        DateTime @default(now())
+    updatedAt        DateTime @updatedAt
+
+    company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+    @@index([companyId, isActive])
+}
+
+model GlobalLlmConfig {
+    id              String   @id @default("global")
+    provider        String
+    model           String
+    baseUrl         String?
+    temperature     Float    @default(0.35)
+    maxOutputTokens Int      @default(1600)
+    updatedAt       DateTime @updatedAt
+}
+
+model AdminAuditLog {
+    id        String   @id @default(cuid())
+    actorId   String?
+    action    String
+    entity    String
+    entityId  String?
+    before    Json?
+    after     Json?
+    createdAt DateTime @default(now())
+
+    actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+    @@index([actorId])
+    @@index([entity, entityId])
 }

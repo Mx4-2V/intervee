@@ -12,6 +12,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { auth } from "~/server/auth";
+import { assertAdminTRPC } from "~/server/auth/admin";
 import { db } from "~/server/db";
 
 /**
@@ -133,3 +134,13 @@ export const protectedProcedure = t.procedure
       },
     });
   });
+
+export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+  const admin = await assertAdminTRPC(ctx.session);
+
+  return next({
+    ctx: {
+      admin,
+    },
+  });
+});

@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useEffect, useMemo, useRef, useState, Suspense, useCallback } from "react";
+import { startTransition, useEffect, useMemo, useRef, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { Physics } from "@react-three/rapier";
 import { Canvas } from "@react-three/fiber";

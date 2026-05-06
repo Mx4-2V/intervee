@@ -60,8 +60,9 @@ cp .env.example .env
 ```env
 DATABASE_URL="file:./dev.db"
 AUTH_SECRET="genera-un-secreto-con-npx-auth-secret"
-AI_PROVIDER="google"
-AI_API_KEY="tu-api-key"
+AUTH_GOOGLE_ID="google-client-id"
+AUTH_GOOGLE_SECRET="google-client-secret"
+GOOGLE_AI_API_KEY="tu-api-key"
 ```
 
 3. Inicializar la base de datos:
@@ -180,16 +181,17 @@ Se envian las preguntas y respuestas al endpoint `/api/companies/[slug]/evaluate
 
 ### Proveedores soportados
 
-Se configura mediante `AI_PROVIDER` en `.env`:
+El provider/model/base URL/temperatura/tokens se configura desde `/admin/settings/llm`.
+El `.env` solo guarda secretos de proveedores:
 
 | Proveedor | Valor | API key requerida |
 |---|---|---|
-| Google Gemini | `google` | `AI_API_KEY` |
-| OpenAI | `openai` | `AI_API_KEY` |
-| Anthropic | `anthropic` | `AI_API_KEY` |
-| Groq | `groq` | `AI_API_KEY` |
+| Google Gemini | `google` | `GOOGLE_AI_API_KEY` |
+| OpenAI | `openai` | `OPENAI_AI_API_KEY` |
+| Anthropic | `anthropic` | `ANTHROPIC_AI_API_KEY` |
+| Groq | `groq` | `GROQ_AI_API_KEY` |
 | Vercel AI Gateway | `gateway` | `AI_GATEWAY_API_KEY` |
-| OpenAI-compatible | `openai-compatible` | `AI_API_KEY` + `AI_BASE_URL` |
+| OpenAI-compatible | `openai-compatible` | `OPENAI_COMPATIBLE_AI_API_KEY` |
 
 ## Editor de mundo
 
@@ -208,17 +210,14 @@ Los assets disponibles se definen en `src/lib/world-layout.ts` con categorias de
 |---|---|---|---|
 | `DATABASE_URL` | `url` | — | URL de conexion a la base de datos |
 | `AUTH_SECRET` | `string` | — | Secreto de NextAuth (requerido en produccion) |
-| `AUTH_DISCORD_ID` | `string` | — | Client ID de Discord OAuth |
-| `AUTH_DISCORD_SECRET` | `string` | — | Client secret de Discord OAuth |
-| `AI_PROVIDER` | `enum` | `google` | Proveedor de IA |
-| `AI_API_KEY` | `string` | — | API key del proveedor de IA |
-| `AI_BASE_URL` | `url` | — | URL base para proveedor OpenAI-compatible |
+| `AUTH_GOOGLE_ID` | `string` | — | Client ID de Google OAuth |
+| `AUTH_GOOGLE_SECRET` | `string` | — | Client secret de Google OAuth |
+| `GOOGLE_AI_API_KEY` | `string` | — | API key de Google AI |
+| `OPENAI_AI_API_KEY` | `string` | — | API key de OpenAI |
+| `ANTHROPIC_AI_API_KEY` | `string` | — | API key de Anthropic |
+| `GROQ_AI_API_KEY` | `string` | — | API key de Groq |
+| `OPENAI_COMPATIBLE_AI_API_KEY` | `string` | — | API key de proveedor OpenAI-compatible |
 | `AI_GATEWAY_API_KEY` | `string` | — | API key de Vercel AI Gateway |
-| `AI_INTERVIEW_MODEL` | `string` | `gemini-2.5-flash` | Modelo de IA para entrevistas |
-| `AI_INTERVIEW_TEMPERATURE` | `number` | `0.35` | Temperatura del modelo (0-2) |
-| `AI_INTERVIEW_QUESTION_COUNT` | `number` | `5` | Cantidad de preguntas (3-8) |
-| `AI_INTERVIEW_MAX_OUTPUT_TOKENS` | `number` | `1600` | Maximo de tokens de salida |
-| `AI_INTERVIEW_PASS_SCORE` | `number` | `72` | Puntuacion minima para aprobar (0-100) |
 | `NODE_ENV` | `enum` | `development` | Modo de ejecucion |
 
 ## Despliegue

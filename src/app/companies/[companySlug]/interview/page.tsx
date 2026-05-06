@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { CompanyInterviewExperience } from "~/components/interview/CompanyInterviewExperience";
-import { getCompanyInterviewProfile } from "~/lib/company-interviews";
+import { getCompanyInterviewProfile } from "~/server/company-interviews";
 
 type PageProps = {
   params: Promise<{ companySlug: string }>;
@@ -9,7 +9,7 @@ type PageProps = {
 
 export default async function CompanyInterviewPage({ params }: PageProps) {
   const { companySlug } = await params;
-  const company = getCompanyInterviewProfile(companySlug);
+  const company = await getCompanyInterviewProfile(companySlug);
 
   if (!company) {
     notFound();

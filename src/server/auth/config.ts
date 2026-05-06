@@ -1,8 +1,9 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env";
+import { getAdminAccess } from "~/server/auth/access";
 import { db } from "~/server/db";
 
 /**
@@ -14,7 +15,8 @@ import { db } from "~/server/db";
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      id: string;
+        id: string;
+        role?: "OWNER" | "ADMIN" | "VIEWER";
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
@@ -27,11 +29,11 @@ declare module "next-auth" {
 }
 
 const providers =
-  env.AUTH_DISCORD_ID && env.AUTH_DISCORD_SECRET
+  env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET
     ? [
-        DiscordProvider({
-          clientId: env.AUTH_DISCORD_ID,
-          clientSecret: env.AUTH_DISCORD_SECRET,
+        GoogleProvider({
+          clientId: env.AUTH_GOOGLE_ID,
+          clientSecret: env.AUTH_GOOGLE_SECRET,
         }),
       ]
     : [];
@@ -45,12 +47,29 @@ export const authConfig = {
   providers,
   adapter: PrismaAdapter(db),
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    async signIn({ profile }) {
+      const email = profile?.email?.toLowerCase();
+      const isVerifiedGoogleEmail = profile?.email_verified === true;
+
+      if (!email || !isVerifiedGoogleEmail) {
+        return false;
+      }
+
+      const admin = await getAdminAccess(email);
+
+      return admin?.isActive === true;
+    },
+    async session({ session, user }) {
+      const admin = await getAdminAccess(user.email);
+
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+          role: admin?.role,
+        },
+      };
+    },
   },
 } satisfies NextAuthConfig;

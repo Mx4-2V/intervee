@@ -1,7 +1,6 @@
 import { interviewEvaluationInputSchema, type InterviewAnswer } from "~/lib/interview-schema";
 import { evaluateCompanyInterview } from "~/lib/interview-ai";
-import { getCompanyInterviewProfile } from "~/lib/company-interviews";
-import { env } from "~/env";
+import { getCompanyInterviewProfile } from "~/server/company-interviews";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -9,13 +8,11 @@ export const runtime = "nodejs";
 const QUOTA_ERROR_PATTERN =
   /quota|rate limit|exceeded|temporarily unavailable|overloaded/i;
 
-const PASS_SCORE = env.AI_INTERVIEW_PASS_SCORE;
-
-function buildFallbackEvaluation(
+async function buildFallbackEvaluation(
   companySlug: string,
   answers: InterviewAnswer[],
 ) {
-  const company = getCompanyInterviewProfile(companySlug);
+  const company = await getCompanyInterviewProfile(companySlug);
   if (!company) return null;
 
   const questionReviews = answers.map((answer) => {
@@ -33,13 +30,13 @@ function buildFallbackEvaluation(
     questionReviews.reduce((sum, r) => sum + r.score, 0) /
       Math.max(1, questionReviews.length),
   );
-  const passed = overallScore >= PASS_SCORE;
+  const passed = overallScore >= company.passScore;
 
   return {
     companyName: company.name,
     hiringSignals: ["Respuestas completadas correctamente"],
     overallScore,
-    passScore: PASS_SCORE,
+    passScore: company.passScore,
     passed,
     questionReviews,
     recommendation: passed ? ("apto" as const) : ("no_apto" as const),
@@ -75,7 +72,7 @@ export async function POST(request: Request, { params }: RouteContext) {
       error instanceof Error ? error.message : "Failed to evaluate interview";
 
     if (QUOTA_ERROR_PATTERN.test(message)) {
-      const fallback = buildFallbackEvaluation(companySlug, answers);
+      const fallback = await buildFallbackEvaluation(companySlug, answers);
       if (fallback) return Response.json(fallback);
     }
 
