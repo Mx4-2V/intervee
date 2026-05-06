@@ -2,7 +2,6 @@
 
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import type {
@@ -10,36 +9,14 @@ import type {
   InterviewQuestion,
   InterviewQuestionsApiResponse,
 } from "~/lib/interview-schema";
-
-// --- COMPONENTE DE CARGA PARA INICIO ---
-function InterviewLoader({ companyName }: { companyName: string }) {
-  return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#004a77] text-white">
-      <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-      <h2 className="mt-8 text-2xl font-bold animate-pulse tracking-widest uppercase">
-        Preparando Entrevista
-      </h2>
-      <p className="mt-2 text-blue-200/70 text-sm font-medium">
-        Generando simulacion para {companyName}...
-      </p>
-    </div>
-  );
-}
-
-// --- NUEVO COMPONENTE DE CARGA PARA SALIDA ---
-function ExitLoader() {
-  return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#004a77] text-white">
-      <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-      <h2 className="mt-8 text-2xl font-bold animate-pulse tracking-widest uppercase">
-        Volviendo al Mundo
-      </h2>
-      <p className="mt-2 text-blue-200/70 text-sm font-medium">
-        Sincronizando progreso...
-      </p>
-    </div>
-  );
-}
+import LoadingScreen from "../LoadingScreen";
+import { Alert } from "../ui";
+import { Button } from "../ui";
+import { LogoContainer } from "../ui";
+import { PageShell } from "../ui";
+import { PanelCard } from "../ui";
+import { SectionLabel } from "../ui";
+import { StatusPill } from "../ui";
 
 type CompanyInterviewExperienceProps = {
   companyName: string;
@@ -270,24 +247,20 @@ export function CompanyInterviewExperience({
   };
 
   return (
-    <main className="bg-intervee-page text-intervee-ink min-h-screen">
+    <PageShell>
       {/* LOADER DE INICIO */}
-      {isLoadingQuestions && <InterviewLoader companyName={companyName} />}
+      {isLoadingQuestions && <LoadingScreen subtitle={`Generando simulacion para ${companyName}...`} title="Preparando Entrevista" />}
       
       {/* LOADER DE SALIDA */}
-      {isExiting && <ExitLoader />}
+      {isExiting && <LoadingScreen subtitle="Sincronizando progreso..." title="Volviendo al Mundo" />}
 
       <div>
         <header className="from-intervee-hero-from to-intervee-hero-to border-intervee-border sticky top-0 z-40 border-b-2 bg-linear-to-b text-white shadow-xl">
           <div className="max-w-intervee-page mx-auto flex items-center justify-between gap-4 px-4 py-4 sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded border border-white/20 bg-white/10 shadow-sm">
-                <Image alt={companyName} height={26} src={logoUrl} width={26} />
-              </div>
+              <LogoContainer alt={companyName} height={26} size="sm" src={logoUrl} width={26} />
               <div className="min-w-0">
-                <p className="text-[0.68rem] font-semibold tracking-[0.18em] text-white/75 uppercase">
-                  Intervee
-                </p>
+                <SectionLabel size="xs">Intervee</SectionLabel>
                 <h1 className="truncate text-sm font-bold sm:text-base">
                   {companyName}
                 </h1>
@@ -296,11 +269,9 @@ export function CompanyInterviewExperience({
 
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="hidden text-right md:block">
-                <p className="text-[0.65rem] font-semibold tracking-[0.16em] text-white/70 uppercase">
-                  Posicion
-                </p>
+                <SectionLabel size="xs" tracking="normal">Posicion</SectionLabel>
                 <p className="text-sm font-bold">{roleTitle}</p>
-                <p className="text-xs text-white/70">{location}</p>
+                <p className="text-xs text-intervee-text-soft">{location}</p>
               </div>
               <button
                 className="bg-intervee-action border-intervee-border flex h-10 w-10 items-center justify-center rounded border-b-4 text-white transition hover:brightness-110 cursor-pointer"
@@ -331,14 +302,14 @@ export function CompanyInterviewExperience({
           {phase !== "intro" ? (
             <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
               <div className="order-2 xl:order-1">
-                <div className="border-intervee-border overflow-hidden border-2 bg-white shadow-md">
+                <div className="border-intervee-border overflow-hidden border-2 bg-intervee-card-strong shadow-md">
                   <div className="border-intervee-border bg-intervee-page-soft border-b-2 px-5 py-4 sm:px-6">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <div className="text-intervee-primary text-[0.7rem] font-semibold tracking-[0.18em] uppercase">
-                          Simulacion activa
+                        <div className="text-intervee-primary">
+                          <SectionLabel size="xs" color="primary" tracking="normal">Simulacion activa</SectionLabel>
                         </div>
-                        <h2 className="mt-1 text-xl font-bold text-gray-900 sm:text-2xl">
+                        <h2 className="mt-1 text-xl font-bold text-intervee-ink sm:text-2xl">
                           {roleTitle}
                         </h2>
                       </div>
@@ -408,7 +379,7 @@ export function CompanyInterviewExperience({
           ) : null}
         </section>
       </div>
-    </main>
+    </PageShell>
   );
 }
 
@@ -438,9 +409,7 @@ function InterviewIntro({
       <section className="bg-intervee-surface border-intervee-border border-2 p-6 text-white shadow-md sm:p-8">
         <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <p className="text-intervee-text-soft text-[0.72rem] font-semibold tracking-[0.2em] uppercase">
-              Preparacion de entrevista
-            </p>
+            <SectionLabel tracking="wide">Preparacion de entrevista</SectionLabel>
             <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
               {companyName}
             </h2>
@@ -449,9 +418,7 @@ function InterviewIntro({
             </p>
           </div>
 
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded border border-white/15 bg-white/10 shadow-sm">
-            <Image alt={companyName} height={44} src={logoUrl} width={44} />
-          </div>
+          <LogoContainer alt={companyName} height={44} size="lg" src={logoUrl} width={44} />
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
@@ -460,9 +427,9 @@ function InterviewIntro({
           <IntroMetric label="Formato" value="Simulacion guiada" />
         </div>
 
-        <div className="mt-8 border border-white/15 bg-black/20 p-5 sm:p-6">
+        <div className="mt-8 border border-intervee-card-border bg-intervee-news/20 p-5 sm:p-6">
           <div className="flex items-center gap-3">
-            <div className="bg-intervee-connect flex h-11 w-11 items-center justify-center rounded border-b-4 border-blue-900 text-white">
+            <div className="bg-intervee-connect flex h-11 w-11 items-center justify-center rounded border-b-4 border-intervee-hero-to text-white">
               <SparkIcon />
             </div>
             <div>
@@ -486,29 +453,18 @@ function InterviewIntro({
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <button
-            className="bg-intervee-connect hover:bg-intervee-connect-hover border-b-4 border-blue-900 px-6 py-3 text-sm font-semibold text-white uppercase transition disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={isLoadingQuestions}
-            onClick={onStart}
-            type="button"
-          >
+          <Button disabled={isLoadingQuestions} onClick={onStart} size="lg" type="button">
             {isLoadingQuestions
               ? "Preparando entrevista..."
               : "Iniciar entrevista"}
-          </button>
-          <button
-            className="border border-white/20 bg-white/10 px-6 py-3 text-center text-sm font-semibold text-white uppercase transition hover:bg-white/15 cursor-pointer"
-            onClick={onExit}
-            type="button"
-          >
+          </Button>
+          <Button onClick={onExit} type="button" variant="secondary" size="lg">
             Volver al mundo
-          </button>
+          </Button>
         </div>
 
         {error ? (
-          <div className="mt-5 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-            {error}
-          </div>
+          <Alert className="mt-5">{error}</Alert>
         ) : null}
       </section>
     </div>
@@ -547,9 +503,7 @@ function InterviewConversation({
           <div className="bg-intervee-surface border-intervee-border max-w-3xl border-2 px-5 py-4 text-white shadow-md">
             <div className="mb-2 flex items-center gap-2">
               <span className="bg-intervee-action h-2.5 w-2.5 rounded-full" />
-              <p className="text-intervee-text-soft text-xs font-semibold tracking-[0.14em] uppercase">
-                Reclutador IA
-              </p>
+              <SectionLabel size="xs" tracking="normal">Reclutador IA</SectionLabel>
             </div>
 
             <p className="text-base leading-7 sm:text-lg">
@@ -568,12 +522,12 @@ function InterviewConversation({
         </div>
 
         <div className="flex justify-end">
-          <div className="border-intervee-border w-full max-w-3xl border-2 bg-white p-4 shadow-md sm:p-5">
-            <label className="text-intervee-primary mb-3 block text-xs font-semibold tracking-[0.16em] uppercase">
-              Tu respuesta
+          <div className="border-intervee-border w-full max-w-3xl border-2 bg-intervee-card-strong p-4 shadow-md sm:p-5">
+            <label className="text-intervee-primary mb-3 block">
+              <SectionLabel size="xs" color="primary" tracking="normal">Tu respuesta</SectionLabel>
             </label>
             <textarea
-              className="border-intervee-border bg-intervee-page focus:border-intervee-connect min-h-40 w-full resize-none border-2 px-4 py-4 text-sm leading-7 text-gray-900 transition outline-none placeholder:text-gray-400 sm:text-base"
+              className="border-intervee-border bg-intervee-page focus:border-intervee-connect min-h-40 w-full resize-none border-2 px-4 py-4 text-sm leading-7 text-intervee-ink transition outline-none placeholder:text-intervee-text-muted sm:text-base"
               disabled={isLoadingQuestions || isSubmitting || !currentQuestion}
               onChange={(event) => {
                 onAnswerChange(event.target.value);
@@ -593,14 +547,13 @@ function InterviewConversation({
                 <span className="text-intervee-text-muted">
                   Ctrl + Enter para continuar
                 </span>
-                <span className="h-1 w-1 rounded-full bg-gray-300" />
+                <span className="h-1 w-1 rounded-full bg-intervee-muted" />
                 <span className="text-intervee-primary">
                   Respuesta guiada paso a paso
                 </span>
               </div>
 
-              <button
-                className="bg-intervee-connect hover:bg-intervee-connect-hover border-b-4 border-blue-900 px-5 py-3 text-sm font-semibold text-white uppercase transition disabled:cursor-not-allowed disabled:opacity-60"
+              <Button
                 disabled={
                   isLoadingQuestions || isSubmitting || !currentQuestion
                 }
@@ -612,13 +565,11 @@ function InterviewConversation({
                   : currentQuestionIndex === questionsCount - 1
                     ? "Enviar entrevista"
                     : "Continuar"}
-              </button>
+              </Button>
             </div>
 
             {error ? (
-              <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                {error}
-              </div>
+              <Alert className="mt-4">{error}</Alert>
             ) : null}
           </div>
         </div>
@@ -643,18 +594,16 @@ function InterviewResults({
       <div className="space-y-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-[0.72rem] font-semibold tracking-[0.18em] text-gray-500 uppercase">
-              Resultado final
-            </p>
-            <h3 className="mt-2 text-3xl font-bold text-gray-900 sm:text-4xl">
+            <SectionLabel color="ink" tracking="normal">Resultado final</SectionLabel>
+            <h3 className="mt-2 text-3xl font-bold text-intervee-ink sm:text-4xl">
               {evaluation.overallScore}/100
             </h3>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-600 sm:text-base">
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-intervee-muted-link sm:text-base">
               {evaluation.summary}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-black/5 bg-white/70 px-5 py-4 text-sm text-gray-700">
+          <div className="rounded-2xl border border-intervee-soft-border bg-intervee-card-strong/70 px-5 py-4 text-sm text-intervee-muted-link">
             <div>Barra minima: {evaluation.passScore}</div>
             <div className="mt-1 font-semibold">
               Decision: {evaluation.recommendation.replace("_", " ")}
@@ -685,20 +634,20 @@ function InterviewResults({
         <div className="space-y-3">
           {evaluation.questionReviews.map((review) => (
             <div
-              className="rounded-2xl border border-black/5 bg-white/65 px-5 py-4"
+              className="rounded-2xl border border-intervee-soft-border bg-intervee-card-strong/65 px-5 py-4"
               key={review.questionId}
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-sm font-medium text-gray-900">
+                <div className="text-sm font-medium text-intervee-ink">
                   {questions.find(
                     (question) => question.id === review.questionId,
                   )?.prompt ?? review.questionId}
                 </div>
-                <div className="rounded-full border border-black/5 bg-white/80 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-gray-600 uppercase">
+                <div className="rounded-full border border-intervee-soft-border bg-intervee-card-strong/80 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-intervee-muted-link uppercase">
                   {review.score}/100
                 </div>
               </div>
-              <p className="mt-3 text-sm leading-6 text-gray-600">
+              <p className="mt-3 text-sm leading-6 text-intervee-muted-link">
                 {review.feedback}
               </p>
             </div>
@@ -706,20 +655,12 @@ function InterviewResults({
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
-          <button
-            className="bg-intervee-connect hover:bg-intervee-connect-hover border-b-4 border-blue-900 px-5 py-3 text-center text-sm font-semibold text-white uppercase transition cursor-pointer"
-            onClick={onExit}
-            type="button"
-          >
+          <Button className="text-center" onClick={onExit} type="button">
             Volver al mundo
-          </button>
-          <button
-            className="border-intervee-border bg-intervee-page-soft border px-5 py-3 text-sm font-semibold text-gray-700 uppercase transition hover:bg-white"
-            onClick={onRestart}
-            type="button"
-          >
+          </Button>
+          <Button onClick={onRestart} type="button" variant="secondary">
             Preparar otra entrevista
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -754,7 +695,7 @@ function StatsPanel({
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-      <PanelCard title="Estado de sesion">
+      <PanelCardLocal title="Estado de sesion">
         <div className="space-y-4">
           <StatRow label="Duracion" value={formatDuration(elapsedSeconds)} />
           <StatRow label="Estado" value={interviewState} />
@@ -771,9 +712,9 @@ function StatsPanel({
             </div>
           </div>
         </div>
-      </PanelCard>
+      </PanelCardLocal>
 
-      <PanelCard title="Foco actual">
+      <PanelCardLocal title="Foco actual">
         <div className="space-y-3">
           <p className="text-intervee-text-soft text-sm leading-6">
             {phase === "intro"
@@ -785,7 +726,7 @@ function StatsPanel({
           <div className="flex flex-wrap gap-2">
             {visibleFocusAreas.slice(0, 4).map((focus) => (
               <span
-                className="bg-white/10 px-3 py-2 text-xs font-bold text-white uppercase"
+                className="bg-intervee-card-strong/10 px-3 py-2 text-xs font-bold text-white uppercase"
                 key={focus}
               >
                 {focus}
@@ -793,9 +734,9 @@ function StatsPanel({
             ))}
           </div>
         </div>
-      </PanelCard>
+      </PanelCardLocal>
 
-      <PanelCard title="Lectura rapida">
+      <PanelCardLocal title="Lectura rapida">
         <div className="text-intervee-text-soft space-y-3 text-sm">
           <p>
             {evaluation
@@ -808,23 +749,21 @@ function StatsPanel({
               : "Es mejor responder con ejemplos concretos, decisiones y resultados medibles."}
           </p>
         </div>
-      </PanelCard>
+      </PanelCardLocal>
     </div>
   );
 }
 
 function IntroMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border border-white/15 bg-black/20 p-4">
-      <p className="text-intervee-text-soft text-[0.68rem] font-semibold tracking-[0.16em] uppercase">
-        {label}
-      </p>
+    <div className="border border-intervee-card-border bg-intervee-news/20 p-4">
+      <SectionLabel size="xs" tracking="normal">{label}</SectionLabel>
       <p className="mt-2 text-sm font-semibold text-white">{value}</p>
     </div>
   );
 }
 
-function PanelCard({
+function PanelCardLocal({
   children,
   title,
 }: {
@@ -832,12 +771,10 @@ function PanelCard({
   title: string;
 }) {
   return (
-    <section className="bg-intervee-surface border-intervee-border border-2 p-5 text-white shadow-md">
-      <p className="text-intervee-text-soft text-[0.72rem] font-semibold tracking-[0.18em] uppercase">
-        {title}
-      </p>
+    <PanelCard>
+      <SectionLabel>{title}</SectionLabel>
       <div className="mt-4">{children}</div>
-    </section>
+    </PanelCard>
   );
 }
 
@@ -862,42 +799,17 @@ function ResultGroup({
   const toneClasses =
     tone === "positive"
       ? "border-intervee-border bg-intervee-page-soft"
-      : "border-intervee-border bg-white";
+      : "border-intervee-border bg-intervee-card-strong";
 
   return (
     <div className={`rounded-2xl border p-5 ${toneClasses}`}>
-      <div className="text-intervee-primary text-xs font-semibold tracking-[0.18em] uppercase">
-        {title}
-      </div>
-      <ul className="mt-3 space-y-2 text-sm text-gray-700">
+      <SectionLabel color="primary" size="sm">{title}</SectionLabel>
+      <ul className="mt-3 space-y-2 text-sm text-intervee-muted-link">
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ul>
     </div>
-  );
-}
-
-function StatusPill({
-  label,
-  tone,
-}: {
-  label: string;
-  tone: "danger" | "neutral" | "success";
-}) {
-  const className =
-    tone === "success"
-      ? "border-intervee-border bg-intervee-action text-white"
-      : tone === "danger"
-        ? "border-intervee-border bg-intervee-news text-white"
-        : "border-intervee-border bg-intervee-page-soft text-intervee-primary";
-
-  return (
-    <span
-      className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold tracking-[0.16em] uppercase ${className}`}
-    >
-      {label}
-    </span>
   );
 }
 

@@ -15,7 +15,9 @@ import { PhysicsWorldItems } from "~/components/world/shared/WorldItems";
 import { useWorldLayoutData } from "~/hooks/use-world-layout-data";
 import { isCompanyPortalItem } from "~/lib/world-layout";
 
-// Componente de carga que creamos
+import LoadingScreen from "../../LoadingScreen";
+import { PanelCard } from "../../ui";
+import { SectionLabel } from "../../ui";
 import WorldLoader from "../WorldLoader"; 
 
 export function GameScene() {
@@ -107,12 +109,7 @@ export function GameScene() {
     <div className="relative h-full w-full">
       {/* Pantalla de carga para el teletransporte (Cubre todo) */}
       {isTeleporting && (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gray-950 text-white">
-          <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
-          <h1 className="text-3xl font-bold mt-8 animate-pulse">
-            Cargando entrevista...
-          </h1>
-        </div>
+        <LoadingScreen title="Cargando entrevista..." />
       )}
 
       {/* UI: Coordenadas */}
@@ -124,17 +121,15 @@ export function GameScene() {
 
       {/* UI: Aviso de Portal Activo */}
       {nearbyPortal ? (
-        <div className="border-intervee-border bg-intervee-surface pointer-events-none absolute top-4 right-4 z-10 max-w-xs border-2 px-4 py-3 text-sm text-white shadow-md animate-in fade-in slide-in-from-right-4">
-          <div className="text-intervee-text-soft text-[11px] tracking-[0.28em] uppercase">
-            Portal activo
-          </div>
+        <PanelCard className="pointer-events-none absolute top-4 right-4 z-10 max-w-xs animate-in fade-in slide-in-from-right-4" padding="sm">
+          <SectionLabel size="xs" tracking="wide">Portal activo</SectionLabel>
           <div className="mt-1 text-lg font-semibold text-white">
             {nearbyPortal.companyPortal.companyName}
           </div>
           <p className="text-intervee-text-soft mt-1 text-sm">
             Entra al círculo para iniciar la entrevista 2D.
           </p>
-        </div>
+        </PanelCard>
       ) : null}
 
       {/* Escena 3D */}

@@ -9,6 +9,10 @@ import {
 } from "~/lib/world-layout";
 
 import type { SaveStatus } from "~/components/world/shared/types";
+import { Button } from "~/components/ui";
+import { Input } from "~/components/ui";
+import { PanelCard } from "~/components/ui";
+import { SectionLabel } from "~/components/ui";
 
 export function EditorPanel({
   activeAsset,
@@ -40,10 +44,8 @@ export function EditorPanel({
 }) {
   return (
     <>
-      <aside className="border-intervee-border bg-intervee-surface absolute top-4 left-4 z-10 flex max-h-[calc(100vh-2rem)] w-[19rem] flex-col gap-3 overflow-y-auto border-2 p-4 text-white shadow-md">
-        <div className="text-intervee-text-soft text-sm font-semibold tracking-[0.2em] uppercase">
-          Editor
-        </div>
+      <PanelCard className="absolute top-4 left-4 z-10 max-h-[calc(100vh-2rem)] w-[19rem] overflow-y-auto" padding="sm">
+        <SectionLabel tracking="wide">Editor</SectionLabel>
         <div className="text-intervee-text-soft text-xs">
           Elige un asset y haz click en el suelo para colocarlo. El marcador
           azul indica el punto inicial del mapa.
@@ -51,26 +53,20 @@ export function EditorPanel({
         <div className="text-intervee-text-soft text-xs">
           Guardado: {saveStatus}
         </div>
-        <button
-          className="bg-intervee-connect hover:bg-intervee-connect-hover border-b-4 border-blue-900 px-3 py-2 text-sm font-semibold text-white uppercase transition"
-          onClick={onSave}
-          type="button"
-        >
+        <Button onClick={onSave} size="sm" type="button">
           Guardar JSON ahora
-        </button>
+        </Button>
 
         {WORLD_EDITOR_GROUPS.map((group) => (
           <div key={group.label} className="space-y-2">
-            <div className="text-intervee-text-soft text-xs font-semibold tracking-[0.2em] uppercase">
-              {group.label}
-            </div>
+            <SectionLabel size="sm" tracking="wide">{group.label}</SectionLabel>
             <div className="grid grid-cols-2 gap-2">
               {group.assets.map((asset) => (
                 <button
                   className={`border px-2 py-2 text-left text-xs font-semibold uppercase ${
                     activeAsset === asset
                       ? "border-intervee-border bg-intervee-page-soft text-intervee-primary"
-                      : "border-white/15 bg-black/20 text-white"
+                      : "border-intervee-card-border bg-intervee-news/20 text-white"
                   }`}
                   key={asset}
                   onClick={() => onSelectAsset(asset)}
@@ -82,53 +78,42 @@ export function EditorPanel({
             </div>
           </div>
         ))}
-      </aside>
+      </PanelCard>
 
-      <aside className="border-intervee-border bg-intervee-surface absolute top-4 right-4 z-10 flex w-[19rem] flex-col gap-3 border-2 p-4 text-white shadow-md">
-        <div className="text-intervee-text-soft text-sm font-semibold tracking-[0.2em] uppercase">
-          Seleccion
-        </div>
+      <PanelCard className="absolute top-4 right-4 z-10 w-[19rem]" padding="sm">
+        <SectionLabel tracking="wide">Seleccion</SectionLabel>
         {selectedItem ? (
           <>
             <div className="text-sm text-white">{selectedItem.asset}</div>
-            <label className="text-intervee-text-soft text-xs">
-              X
-              <input
-                className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
-                onChange={(event) =>
-                  onUpdateSelectedItem("x", Number(event.target.value))
-                }
-                type="number"
-                value={selectedItem.position[0]}
-              />
-            </label>
-            <label className="text-intervee-text-soft text-xs">
-              Y
-              <input
-                className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
-                onChange={(event) =>
-                  onUpdateSelectedItem("y", Number(event.target.value))
-                }
-                type="number"
-                value={selectedItem.position[1]}
-              />
-            </label>
-            <label className="text-intervee-text-soft text-xs">
-              Z
-              <input
-                className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
-                onChange={(event) =>
-                  onUpdateSelectedItem("z", Number(event.target.value))
-                }
-                type="number"
-                value={selectedItem.position[2]}
-              />
-            </label>
+            <Input
+              label="X"
+              onChange={(event) =>
+                onUpdateSelectedItem("x", Number(event.target.value))
+              }
+              type="number"
+              value={selectedItem.position[0]}
+            />
+            <Input
+              label="Y"
+              onChange={(event) =>
+                onUpdateSelectedItem("y", Number(event.target.value))
+              }
+              type="number"
+              value={selectedItem.position[1]}
+            />
+            <Input
+              label="Z"
+              onChange={(event) =>
+                onUpdateSelectedItem("z", Number(event.target.value))
+              }
+              type="number"
+              value={selectedItem.position[2]}
+            />
             {selectedItem.asset === "billboard_16_9" ? (
               <label className="text-intervee-text-soft text-xs">
                 Imagen
                 <select
-                  className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
+                  className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-intervee-ink"
                   onChange={(event) =>
                     onUpdateSelectedImageUrl(event.target.value)
                   }
@@ -144,75 +129,63 @@ export function EditorPanel({
             ) : null}
             {selectedItem.asset === "company_portal" ? (
               <>
-                <label className="text-intervee-text-soft text-xs">
-                  Empresa
-                  <input
-                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
-                    onChange={(event) =>
-                      onUpdateSelectedCompanyPortalField(
-                        "companyName",
-                        event.target.value,
-                      )
-                    }
-                    type="text"
-                    value={
-                      selectedItem.companyPortal?.companyName ?? "Microsoft"
-                    }
-                  />
-                </label>
-                <label className="text-intervee-text-soft text-xs">
-                  Slug
-                  <input
-                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
-                    onChange={(event) =>
-                      onUpdateSelectedCompanyPortalField(
-                        "companySlug",
-                        event.target.value,
-                      )
-                    }
-                    type="text"
-                    value={
-                      selectedItem.companyPortal?.companySlug ?? "microsoft"
-                    }
-                  />
-                </label>
-                <label className="text-intervee-text-soft text-xs">
-                  Ruta
-                  <input
-                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
-                    onChange={(event) =>
-                      onUpdateSelectedCompanyPortalField(
-                        "companyRoute",
-                        event.target.value,
-                      )
-                    }
-                    type="text"
-                    value={
-                      selectedItem.companyPortal?.companyRoute ??
-                      "/companies/microsoft/interview"
-                    }
-                  />
-                </label>
-                <label className="text-intervee-text-soft text-xs">
-                  Documento
-                  <input
-                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
-                    onChange={(event) =>
-                      onUpdateSelectedCompanyPortalField(
-                        "documentKey",
-                        event.target.value,
-                      )
-                    }
-                    type="text"
-                    value={
-                      selectedItem.companyPortal?.documentKey ?? "microsoft"
-                    }
-                  />
-                </label>
+                <Input
+                  label="Empresa"
+                  onChange={(event) =>
+                    onUpdateSelectedCompanyPortalField(
+                      "companyName",
+                      event.target.value,
+                    )
+                  }
+                  type="text"
+                  value={
+                    selectedItem.companyPortal?.companyName ?? "Microsoft"
+                  }
+                />
+                <Input
+                  label="Slug"
+                  onChange={(event) =>
+                    onUpdateSelectedCompanyPortalField(
+                      "companySlug",
+                      event.target.value,
+                    )
+                  }
+                  type="text"
+                  value={
+                    selectedItem.companyPortal?.companySlug ?? "microsoft"
+                  }
+                />
+                <Input
+                  label="Ruta"
+                  onChange={(event) =>
+                    onUpdateSelectedCompanyPortalField(
+                      "companyRoute",
+                      event.target.value,
+                    )
+                  }
+                  type="text"
+                  value={
+                    selectedItem.companyPortal?.companyRoute ??
+                    "/companies/microsoft/interview"
+                  }
+                />
+                <Input
+                  label="Documento"
+                  onChange={(event) =>
+                    onUpdateSelectedCompanyPortalField(
+                      "documentKey",
+                      event.target.value,
+                    )
+                  }
+                  type="text"
+                  value={
+                    selectedItem.companyPortal?.documentKey ?? "microsoft"
+                  }
+                />
                 <label className="text-intervee-text-soft text-xs">
                   Logo
                   <select
-                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
+                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-intervee-ink"
                     onChange={(event) =>
                       onUpdateSelectedCompanyPortalField(
                         "logoUrl",
@@ -231,22 +204,19 @@ export function EditorPanel({
                     ))}
                   </select>
                 </label>
-                <label className="text-intervee-text-soft text-xs">
-                  Radio de activacion
-                  <input
-                    className="bg-intervee-page border-intervee-border mt-1 w-full border px-2 py-2 text-sm text-gray-900"
-                    min={1}
-                    onChange={(event) =>
-                      onUpdateSelectedCompanyPortalField(
-                        "activationRadius",
-                        Number(event.target.value),
-                      )
-                    }
-                    step="0.1"
-                    type="number"
-                    value={selectedItem.companyPortal?.activationRadius ?? 3.2}
-                  />
-                </label>
+                <Input
+                  label="Radio de activacion"
+                  min={1}
+                  onChange={(event) =>
+                    onUpdateSelectedCompanyPortalField(
+                      "activationRadius",
+                      Number(event.target.value),
+                    )
+                  }
+                  step="0.1"
+                  type="number"
+                  value={selectedItem.companyPortal?.activationRadius ?? 3.2}
+                />
                 <label className="text-intervee-text-soft text-xs">
                   Color
                   <input
@@ -264,36 +234,39 @@ export function EditorPanel({
               </>
             ) : null}
             <div className="grid grid-cols-2 gap-2">
-              <button
-                className="border border-white/15 bg-black/20 px-3 py-2 text-sm font-semibold text-white uppercase"
+              <Button
                 onClick={() => onNudgeRotation(-Math.PI / 2)}
+                size="sm"
                 type="button"
+                variant="secondary"
               >
                 Rotar -90
-              </button>
-              <button
-                className="border border-white/15 bg-black/20 px-3 py-2 text-sm font-semibold text-white uppercase"
+              </Button>
+              <Button
                 onClick={() => onNudgeRotation(Math.PI / 2)}
+                size="sm"
                 type="button"
+                variant="secondary"
               >
                 Rotar +90
-              </button>
+              </Button>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <button
-                className="bg-intervee-connect hover:bg-intervee-connect-hover border-b-4 border-blue-900 px-3 py-2 text-sm font-semibold text-white uppercase transition"
+              <Button
                 onClick={onDuplicateSelected}
+                size="sm"
                 type="button"
               >
                 Duplicar
-              </button>
-              <button
-                className="bg-intervee-news border-intervee-border border-b-4 px-3 py-2 text-sm font-semibold text-white uppercase"
+              </Button>
+              <Button
                 onClick={onDeleteSelected}
+                size="sm"
                 type="button"
+                variant="danger"
               >
                 Eliminar
-              </button>
+              </Button>
             </div>
           </>
         ) : (
@@ -301,7 +274,7 @@ export function EditorPanel({
             Selecciona un objeto en la escena.
           </div>
         )}
-      </aside>
+      </PanelCard>
     </>
   );
 }
