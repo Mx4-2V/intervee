@@ -1,11 +1,10 @@
 "use client";
 
-import { startTransition, useEffect, useMemo, useRef, useState, Suspense } from "react";
+import { startTransition, useEffect, useMemo, useRef, useState, Suspense, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Physics } from "@react-three/rapier";
 import { Canvas } from "@react-three/fiber";
 
-// Componentes del mundo
 import { GamePlayer } from "~/components/world/game/GamePlayer";
 import { GroundCollider } from "~/components/world/shared/Ground";
 import { SHOW_COORDS } from "~/components/world/shared/scene-constants";
@@ -18,13 +17,19 @@ import { isCompanyPortalItem } from "~/lib/world-layout";
 import LoadingScreen from "../../LoadingScreen";
 import { PanelCard } from "../../ui";
 import { SectionLabel } from "../../ui";
-import WorldLoader from "../WorldLoader"; 
+
+const MIN_LOAD_MS = 2500;
 
 export function GameScene() {
   const router = useRouter();
   const { items } = useWorldLayoutData();
-  
-  // Estados para posición y transiciones
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setReady(true), MIN_LOAD_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
   const [playerPosition, setPlayerPosition] = useState<PlayerPosition>({
     x: 0,
     y: 0,
@@ -33,7 +38,6 @@ export function GameScene() {
   const [isTeleporting, setIsTeleporting] = useState(false);
   const activatedPortalIdRef = useRef<string | null>(null);
 
-  // Configuración de cámara memoizada
   const camera = useMemo(
     () => ({
       far: 100,
@@ -49,7 +53,6 @@ export function GameScene() {
     [items],
   );
 
-  // Lógica para detectar el portal más cercano (para la UI)
   const nearbyPortal = useMemo(() => {
     let closestPortal: (typeof companyPortals)[number] | null = null;
     let closestDistance = Number.POSITIVE_INFINITY;
@@ -72,7 +75,6 @@ export function GameScene() {
     return closestPortal;
   }, [companyPortals, playerPosition.x, playerPosition.z]);
 
-  // Lógica de Teletransporte / Cambio de página
   useEffect(() => {
     const activePortal = companyPortals.find((portal) => {
       const distance = Math.hypot(
@@ -94,10 +96,8 @@ export function GameScene() {
 
     activatedPortalIdRef.current = activePortal.id;
 
-    // Iniciamos efecto de teletransporte
     setIsTeleporting(true);
 
-    // Pequeño delay para que el usuario vea la transición antes de cambiar de ruta
     setTimeout(() => {
       startTransition(() => {
         router.push(activePortal.companyPortal.companyRoute);
@@ -107,21 +107,20 @@ export function GameScene() {
 
   return (
     <div className="relative h-full w-full">
-      {/* Pantalla de carga para el teletransporte (Cubre todo) */}
+      {!ready && <LoadingScreen title="Cargando Entorno 3D..." />}
+
       {isTeleporting && (
         <LoadingScreen title="Cargando entrevista..." />
       )}
 
-      {/* UI: Coordenadas */}
-      {SHOW_COORDS ? (
+      {ready && SHOW_COORDS ? (
         <div className="border-intervee-border pointer-events-none absolute top-4 left-4 z-10 border bg-black/65 px-3 py-2 font-mono text-sm text-white shadow-md">
           {`x: ${playerPosition.x.toFixed(2)} y: ${playerPosition.y.toFixed(2)} z: ${playerPosition.z.toFixed(2)}`}
         </div>
       ) : null}
 
-      {/* UI: Aviso de Portal Activo */}
-      {nearbyPortal ? (
-        <PanelCard className="pointer-events-none absolute top-4 right-4 z-10 max-w-xs animate-in fade-in slide-in-from-right-4" padding="sm">
+      {ready && nearbyPortal ? (
+        <PanelCard className="pointer-events-none absolute top-4 right-4 z-10 max-w-xs animate-in fade-in slide-in slide-in-from-right-4" padding="sm">
           <SectionLabel size="xs" tracking="wide">Portal activo</SectionLabel>
           <div className="mt-1 text-lg font-semibold text-white">
             {nearbyPortal.companyPortal.companyName}
@@ -132,9 +131,8 @@ export function GameScene() {
         </PanelCard>
       ) : null}
 
-      {/* Escena 3D */}
       <Canvas orthographic camera={camera} dpr={[1, 1.5]} shadows>
-        <Suspense fallback={<WorldLoader />}>
+        <Suspense fallback={null}>
           <WorldEnvironment editorEnabled={false} />
           <Physics gravity={[0, -20, 0]}>
             <GroundCollider />
