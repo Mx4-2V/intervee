@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
@@ -7,8 +8,6 @@ import { db } from "~/server/db";
 
 const inputClass =
   "border-intervee-border bg-black/25 px-3 py-2 text-sm text-white outline-none focus:border-intervee-connect w-full";
-
-const labelClass = "text-intervee-text-soft text-xs";
 
 function val(formData: FormData, key: string) {
   const entry = formData.get(key);
@@ -175,9 +174,9 @@ export default async function EditCompanyPage({
       <div className="mx-auto flex max-w-4xl flex-col gap-6">
         <header className="border-b border-white/10 pb-5">
           <SectionLabel tracking="wide">
-            <a className="hover:text-white" href="/admin/companies">
+            <Link className="hover:text-white" href="/admin/companies">
               Empresas
-            </a>{" "}
+            </Link>{" "}
             / Editar
           </SectionLabel>
           <div className="mt-1 flex items-center gap-3">
