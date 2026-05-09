@@ -3,10 +3,13 @@ import { PrismaClient } from "../generated/prisma/index.js";
 const db = new PrismaClient();
 
 const email = process.argv[2]?.trim().toLowerCase();
-const role = process.argv[3] === "ADMIN" || process.argv[3] === "VIEWER" ? process.argv[3] : "OWNER";
+const role =
+  process.argv[3] === "OWNER" || process.argv[3] === "ADMIN"
+    ? process.argv[3]
+    : "OWNER";
 
 if (!email) {
-  console.error("Usage: npm run db:admin -- admin@example.com [OWNER|ADMIN|VIEWER]");
+  console.error("Usage: npm run db:admin -- admin@example.com [OWNER|ADMIN]");
   process.exit(1);
 }
 

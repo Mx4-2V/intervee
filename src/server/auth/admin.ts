@@ -2,10 +2,32 @@ import { redirect } from "next/navigation";
 import { TRPCError } from "@trpc/server";
 import type { Session } from "next-auth";
 
-import { getAdminAccess } from "~/server/auth/access";
+import { getAdminAccess, getUserAccess } from "~/server/auth/access";
 import { auth } from "~/server/auth";
 
-const ADMIN_SIGN_IN_URL = "/api/auth/signin?callbackUrl=/admin";
+const ADMIN_SIGN_IN_URL = "/?callbackUrl=/admin";
+
+export async function requireUserPage(callbackUrl = "/game") {
+  const session = await auth();
+  const access = await getUserAccess(session?.user.email);
+
+  if (!session?.user || !access?.isActive) {
+    redirect(`/?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+  }
+
+  return { access, session };
+}
+
+export async function requireUserApi() {
+  const session = await auth();
+  const access = await getUserAccess(session?.user.email);
+
+  if (!session?.user || !access?.isActive) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  return null;
+}
 
 export async function requireAdminPage() {
   const session = await auth();

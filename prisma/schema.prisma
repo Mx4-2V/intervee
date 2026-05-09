@@ -12,9 +12,9 @@ datasource db {
 }
 
 enum AdminRole {
+    USER
     OWNER
     ADMIN
-    VIEWER
 }
 
 model Post {
@@ -63,6 +63,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    passwordHash  String?
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
@@ -81,7 +82,7 @@ model VerificationToken {
 model AdminWhitelist {
     id        String    @id @default(cuid())
     email     String    @unique
-    role      AdminRole @default(ADMIN)
+    role      AdminRole @default(USER)
     isActive  Boolean   @default(true)
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt

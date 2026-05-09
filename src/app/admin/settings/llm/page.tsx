@@ -61,7 +61,7 @@ export default async function AdminLlmSettingsPage() {
   const config = await db.globalLlmConfig.findUnique({ where: { id: "global" } });
 
   return (
-    <PageShell className="px-5 py-8 sm:px-8">
+    <PageShell className="bg-transparent px-5 py-8 sm:px-8">
       <div className="mx-auto max-w-3xl">
         <PanelCard>
           <SectionLabel tracking="wide">LLM global</SectionLabel>

@@ -161,7 +161,7 @@ export const adminRouter = createTRPCRouter({
       z.object({
         email: z.string().email().transform((email) => email.toLowerCase()),
         isActive: z.boolean().default(true),
-        role: z.enum(["OWNER", "ADMIN", "VIEWER"]).default("ADMIN"),
+        role: z.enum(["USER", "ADMIN", "OWNER"]).default("USER"),
       }),
     )
     .mutation(async ({ ctx, input }) => {

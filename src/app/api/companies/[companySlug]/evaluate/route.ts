@@ -1,5 +1,6 @@
 import { interviewEvaluationInputSchema, type InterviewAnswer } from "~/lib/interview-schema";
 import { evaluateCompanyInterview } from "~/lib/interview-ai";
+import { requireUserApi } from "~/server/auth/admin";
 import { getCompanyInterviewProfile } from "~/server/company-interviews";
 
 export const dynamic = "force-dynamic";
@@ -52,6 +53,9 @@ type RouteContext = {
 };
 
 export async function POST(request: Request, { params }: RouteContext) {
+  const unauthorized = await requireUserApi();
+  if (unauthorized) return unauthorized;
+
   const { companySlug } = await params;
 
   const parseResult = interviewEvaluationInputSchema.safeParse(

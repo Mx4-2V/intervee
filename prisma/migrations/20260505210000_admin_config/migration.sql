@@ -2,7 +2,7 @@
 CREATE SCHEMA IF NOT EXISTS "public";
 
 -- CreateEnum
-CREATE TYPE "AdminRole" AS ENUM ('OWNER', 'ADMIN', 'VIEWER');
+CREATE TYPE "AdminRole" AS ENUM ('USER', 'OWNER', 'ADMIN');
 
 -- CreateTable
 CREATE TABLE "Post" (
@@ -51,6 +51,7 @@ CREATE TABLE "User" (
     "email" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
+    "passwordHash" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -66,7 +67,7 @@ CREATE TABLE "VerificationToken" (
 CREATE TABLE "AdminWhitelist" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "role" "AdminRole" NOT NULL DEFAULT 'ADMIN',
+    "role" "AdminRole" NOT NULL DEFAULT 'USER',
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

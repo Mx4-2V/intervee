@@ -1,4 +1,5 @@
 import { generateCompanyInterviewQuestions } from "~/lib/interview-ai";
+import { requireUserApi } from "~/server/auth/admin";
 import { getCompanyInterviewProfile } from "~/server/company-interviews";
 
 export const dynamic = "force-dynamic";
@@ -40,6 +41,9 @@ async function buildFallbackQuestions(companySlug: string) {
 }
 
 export async function POST(_: Request, { params }: RouteContext) {
+  const unauthorized = await requireUserApi();
+  if (unauthorized) return unauthorized;
+
   const { companySlug } = await params;
 
   try {

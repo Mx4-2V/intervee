@@ -1,6 +1,7 @@
 import { PrismaClient } from "../generated/prisma/index.js";
 
 const db = new PrismaClient();
+const INITIAL_ADMIN_EMAIL = "giovanni.ahumada.t@mail.pucv.cl";
 
 const microsoftSoftwareEngineerDocument = `
 Role: Software Engineer
@@ -24,6 +25,25 @@ Interview evaluation rubric:
 `.trim();
 
 async function main() {
+  await db.adminWhitelist.upsert({
+    create: { email: INITIAL_ADMIN_EMAIL, role: "OWNER" },
+    update: { isActive: true, role: "OWNER" },
+    where: { email: INITIAL_ADMIN_EMAIL },
+  });
+
+  await db.user.upsert({
+    create: {
+      email: INITIAL_ADMIN_EMAIL,
+      emailVerified: new Date(),
+      name: "Giovanni Ahumada",
+    },
+    update: {
+      emailVerified: new Date(),
+      name: "Giovanni Ahumada",
+    },
+    where: { email: INITIAL_ADMIN_EMAIL },
+  });
+
   const company = await db.company.upsert({
     create: {
       description:

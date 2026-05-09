@@ -2,12 +2,82 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { signIn } from "next-auth/react";
 
 import { Button } from "~/components/ui";
 import { Input } from "~/components/ui";
 import { PageShell } from "~/components/ui";
 import { PanelCard } from "~/components/ui";
 import { SectionLabel } from "~/components/ui";
+
+function getAuthErrorMessage(error?: string) {
+  switch (error) {
+    case "AccessDenied":
+      return {
+        description:
+          "Tu correo no esta habilitado para entrar en este entorno. Si deberias tener acceso, pide que te agreguen a la whitelist.",
+        title: "Lo siento, no estas autorizado",
+      };
+    case "OAuthAccountNotLinked":
+      return {
+        description:
+          "Ya existe un usuario con ese correo en el sistema. Hemos habilitado la vinculacion por correo verificado para Google; intenta iniciar sesion otra vez.",
+        title: "Tu cuenta necesita vincularse",
+      };
+    case "CredentialsSignin":
+      return {
+        description:
+          "Verifica tu correo, tu contrasena y que tu usuario haya sido habilitado para entrar.",
+        title: "No pudimos iniciar sesion",
+      };
+    default:
+      return error
+        ? {
+            description:
+              "Ocurrio un problema al intentar iniciar sesion. Intentalo otra vez en unos segundos.",
+            title: "Error de autenticacion",
+          }
+        : null;
+  }
+}
+
+function AuthErrorModal({
+  message,
+  onClose,
+}: {
+  message: { description: string; title: string };
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
+      <div className="border-intervee-border shadow-intervee-panel w-full max-w-md border bg-[#1a0f12] p-6 text-white">
+        <SectionLabel tracking="wide">Acceso</SectionLabel>
+        <h2 className="mt-3 text-2xl font-black uppercase">{message.title}</h2>
+        <p className="text-intervee-text-soft mt-3 text-sm leading-6">
+          {message.description}
+        </p>
+        <div className="mt-6 flex gap-3">
+          <button
+            className="bg-intervee-connect hover:bg-intervee-connect-hover flex-1 border-b-4 border-intervee-hero-to px-4 py-3 text-sm font-bold uppercase transition"
+            onClick={onClose}
+            type="button"
+          >
+            Entendido
+          </button>
+          <Link
+            className="border-intervee-border bg-white/5 flex-1 border px-4 py-3 text-center text-sm font-bold uppercase transition hover:bg-white/10"
+            href="/privacy"
+            onClick={onClose}
+          >
+            Ver privacidad
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function GoogleIcon() {
   return (
@@ -32,9 +102,74 @@ function GoogleIcon() {
   );
 }
 
-export function HomeScreen() {
+type HomeScreenProps = {
+  callbackUrl: string;
+  error?: string;
+  googleEnabled: boolean;
+};
+
+export function HomeScreen({ callbackUrl, error, googleEnabled }: HomeScreenProps) {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const initialErrorMessage = getAuthErrorMessage(error);
+  const [authErrorMessage, setAuthErrorMessage] = useState(initialErrorMessage);
+  const [loginError, setLoginError] = useState<string | null>(
+    error === "CredentialsSignin"
+      ? "Credenciales invalidas o usuario fuera de whitelist."
+      : null,
+  );
+  const [isGooglePending, startGoogleTransition] = useTransition();
+  const [isCredentialsPending, startCredentialsTransition] = useTransition();
+
+  const isPending = isGooglePending || isCredentialsPending;
+
+  const handleGoogleSignIn = () => {
+    setLoginError(null);
+    setAuthErrorMessage(null);
+    if (!googleEnabled) {
+      setLoginError("Google login no esta configurado en el servidor.");
+      return;
+    }
+
+    startGoogleTransition(() => {
+      void signIn("google", { callbackUrl });
+    });
+  };
+
+  const handleCredentialsSignIn = () => {
+    setLoginError(null);
+    setAuthErrorMessage(null);
+    startCredentialsTransition(() => {
+      void signIn("credentials", {
+        callbackUrl,
+        email,
+        password,
+        redirect: false,
+      }).then((result) => {
+        if (result?.error) {
+          setLoginError("Credenciales invalidas o usuario fuera de whitelist.");
+          return;
+        }
+
+        router.push(result?.url ?? callbackUrl);
+        router.refresh();
+      });
+    });
+  };
+
   return (
     <PageShell>
+      {authErrorMessage ? (
+        <AuthErrorModal
+          message={authErrorMessage}
+          onClose={() => {
+            setAuthErrorMessage(null);
+            router.replace("/");
+          }}
+        />
+      ) : null}
+
       <section
         className="from-intervee-hero-from to-intervee-hero-to relative min-h-[31.25rem] overflow-hidden bg-linear-to-b pb-8 text-white"
         id="hero"
@@ -54,23 +189,16 @@ export function HomeScreen() {
               Un mundo de entrevistas
             </p>
 
-            <Button
-              className="justify-self-center md:justify-self-end md:text-base"
-              disabled
-              size="sm"
-              type="button"
-              variant="primary"
-              aria-label="Unete gratis proximamente"
-            >
-              Unete gratis
-            </Button>
+              <Button className="justify-self-center md:justify-self-end md:text-base" size="sm" type="button" variant="primary">
+                Acceso por whitelist
+              </Button>
           </div>
         </nav>
 
         <div className="max-w-intervee-page relative z-10 mx-auto mt-8 flex flex-col items-center justify-between gap-8 px-4 md:flex-row">
           <section
-            aria-label="Login desactivado"
-            className="shadow-intervee-panel md:w-intervee-login ml-auto w-full rounded bg-intervee-news/50 p-6"
+            aria-label="Login"
+            className="shadow-intervee-panel md:w-intervee-login ml-auto w-full rounded border border-white/10 bg-intervee-news/55 p-6 backdrop-blur-sm"
           >
             <div className="grid grid-cols-1 gap-6">
               <div>
@@ -78,12 +206,13 @@ export function HomeScreen() {
                   Inicia sesion con Google
                 </p>
                 <button
-                  className="bg-intervee-google flex w-full cursor-not-allowed items-center justify-center rounded border-b-2 border-intervee-border/30 px-4 py-2 text-sm font-bold uppercase opacity-55"
-                  disabled
+                  className="bg-intervee-google flex w-full items-center justify-center rounded border-b-2 border-intervee-border/30 px-4 py-3 text-sm font-bold uppercase transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-55"
+                  disabled={isPending || !googleEnabled}
+                  onClick={handleGoogleSignIn}
                   type="button"
                 >
                   <GoogleIcon />
-                  Google
+                  {isGooglePending ? "Conectando..." : "Google"}
                 </button>
               </div>
 
@@ -92,18 +221,50 @@ export function HomeScreen() {
                   O utiliza tu email y contrasena
                 </p>
                 <fieldset className="space-y-2">
-                  <Input disabled placeholder="Email" type="email" variant="login" />
-                  <Input disabled placeholder="Contrasena" type="password" variant="login" />
-                  <Link
-                    className="bg-intervee-connect hover:bg-intervee-connect-hover block w-full border-b-4 border-intervee-hero-to py-3 text-center font-bold text-white uppercase transition active:translate-y-1"
-                    href="/game"
+                  <Input
+                    autoComplete="email"
+                    className="border border-transparent opacity-100 focus:border-white/20"
+                    disabled={isPending}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="Email"
+                    type="email"
+                    value={email}
+                    variant="login"
+                  />
+                  <Input
+                    autoComplete="current-password"
+                    className="border border-transparent opacity-100 focus:border-white/20"
+                    disabled={isPending}
+                    onChange={(event) => setPassword(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        handleCredentialsSignIn();
+                      }
+                    }}
+                    placeholder="Contrasena"
+                    type="password"
+                    value={password}
+                    variant="login"
+                  />
+                  <button
+                    className="bg-intervee-connect hover:bg-intervee-connect-hover block w-full border-b-4 border-intervee-hero-to py-3 text-center font-bold text-white uppercase transition active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-60"
+                    disabled={isPending || email.trim().length === 0 || password.length === 0}
+                    onClick={handleCredentialsSignIn}
+                    type="button"
                   >
-                    Conectar
-                  </Link>
+                    {isCredentialsPending ? "Verificando..." : "Conectar"}
+                  </button>
                 </fieldset>
-                <p className="mt-2 text-center text-xs text-intervee-text-muted underline">
-                  Contrasena olvidada?
-                </p>
+                {loginError ? (
+                  <p className="mt-2 rounded bg-red-950/40 px-3 py-2 text-center text-xs font-semibold text-red-200">
+                    {loginError}
+                  </p>
+                ) : (
+                  <p className="mt-2 text-center text-xs text-intervee-text-muted">
+                    Solo usuarios en whitelist pueden iniciar sesion.
+                  </p>
+                )}
               </div>
             </div>
           </section>
